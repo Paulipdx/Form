@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+ 
+{% block body %}
+
+    Hello, 
+    {% if name %}
+        {{ name }}
+    {% else %}
+        Patient
+    {% endif %}
+
+{% endblock %}

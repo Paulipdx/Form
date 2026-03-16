@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+
+    <title>FORM Massage Rehab Clinic</title>
+</head>
+<body>
+<nav>
+        <a href="{{ url_for('index') }}" class="logo-link">
+         <img src="{{ url_for('static', filename='images/logoicon.png') }}" alt="Tactus Massage + Wellness Logo" class="nav-logo"/>
+        </a>
+            
+    
+    <ul>
+        <li><a href="{{ url_for('index') }}">Home</a></li>
+        <li><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('services') }}">Services</a></li>
+        <li><a href="{{ url_for('shop') }}">Shop</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        
+        <!-- Add more links here -->
+    </ul>
+</nav>
+<main class="content-container">
+   
+
+    {% block body %}{% endblock %}
+     <a href="https://calendly.com/tactuswellness" class="btn-book">Book an Appointment</a>
+
+</main>
+
+</body>
+</html>
