@@ -5,7 +5,7 @@ import wtforms
 
 # Initialize your app
 app = Flask(__name__)
-application = app
+app:app
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -36,5 +36,5 @@ def contact():
 
 
 
-if __name__ in "__main__":
-    app.run(debug=True)
+if __name__ == "__main__":
+ app.run(debug=True)
