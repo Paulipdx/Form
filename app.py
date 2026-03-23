@@ -5,7 +5,7 @@ import wtforms
 
 # Initialize your app
 app = Flask(__name__)
-app:app
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
