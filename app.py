@@ -6,6 +6,10 @@ import wtforms
 # Initialize your app
 app = Flask(__name__)
 
+@app.get("/healthz")
+def healthz():
+ return "ok", 200
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -37,4 +41,4 @@ def contact():
 
 
 if __name__ == "__main__":
- app.run(debug=True)
+ app.run(host="0.0.0.0", port=8000, debug=True)
