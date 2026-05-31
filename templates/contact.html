@@ -353,14 +353,13 @@ async function submitForm() {
     return;
   }
 
-  const payload = {
-    firstName,
-    lastName:  document.getElementById('lastName').value.trim(),
+const payload = {
+    first_name: firstName,
+    last_name:  document.getElementById('lastName').value.trim(),
     email,
-    phone:     document.getElementById('phone').value.trim(),
-    subject:   document.getElementById('subject').value,
+    phone:      document.getElementById('phone').value.trim(),
+    subject:    document.getElementById('subject').value,
     message,
-    to:        'pablo@tactuswellness.com',
   };
 
   // Send via Formspree (replace YOUR_FORM_ID with your Formspree form ID)
