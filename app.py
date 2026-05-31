@@ -64,10 +64,10 @@ def contact():
         msg['From'] = SMTP_USERNAME
         msg['To'] = RECEIVER_EMAIL
 
-        # Send the email via SMTP
+               # Send the email via Network Solutions SMTP (SSL Port 465)
         try:
-            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-                server.starttls()
+            # CRITICAL: Changed from smtplib.SMTP to smtplib.SMTP_SSL for Port 465
+            with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
                 server.send_message(msg)
             
@@ -79,9 +79,10 @@ def contact():
         except Exception as e:
             print(f"SMTP Error: {e}")
             if is_ajax:
-                return jsonify({'ok': False, 'error': 'Failed to send email'}), 500
+                return jsonify({'ok': False, 'error': f'Failed to send email: {str(e)}'})
             flash('An error occurred while sending your message.', 'danger')
             return render_template('contact.html')
+
 
     # GET request: Render the contact page
     return render_template('contact.html')
