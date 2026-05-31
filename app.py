@@ -8,7 +8,13 @@ app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 # --- FIXED NETWORK SOLUTIONS CONFIGURATION ---
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.networksolutionsemail.com") # Changed placeholder
-SMTP_PORT = int(os.getenv("SMTP_PORT", 465))                             
+# Check if Coolify broke the variable conversion by passing a redacted string
+raw_port = os.getenv("SMTP_PORT", "465")
+if not raw_port or "<REDACTED>" in str(raw_port) or not str(raw_port).isdigit():
+    SMTP_PORT = 465
+else:
+    SMTP_PORT = int(raw_port)
+                             
 SMTP_USERNAME = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Tactu$massage2002")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "pablo@tactuswellness.com")
