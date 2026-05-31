@@ -7,7 +7,8 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 # --- FIXED NETWORK SOLUTIONS CONFIGURATION ---
-SMTP_SERVER = os.getenv("SMTP_SERVER", "://networksolutionsemail.com")
+# FIXED: Removed the accidental '://' protocol characters
+SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.networksolutionsemail.com")
 
 # Force 2525 if Coolify sends an encrypted string
 raw_port = os.getenv("SMTP_PORT", "2525")
@@ -106,7 +107,6 @@ def contact():
             return render_template('contact.html')
 
     return render_template('contact.html')
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
