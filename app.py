@@ -7,14 +7,15 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 # --- FIXED NETWORK SOLUTIONS CONFIGURATION ---
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.networksolutionsemail.com") # Changed placeholder
-# Check if Coolify broke the variable conversion by passing a redacted string
-raw_port = os.getenv("SMTP_PORT", "465")
+SMTP_SERVER = os.getenv("SMTP_SERVER", "://networksolutionsemail.com")
+
+# Force 2525 if Coolify sends an encrypted string
+raw_port = os.getenv("SMTP_PORT", "2525")
 if not raw_port or "<REDACTED>" in str(raw_port) or not str(raw_port).isdigit():
-    SMTP_PORT = 465
+    SMTP_PORT = 2525
 else:
     SMTP_PORT = int(raw_port)
-                             
+
 SMTP_USERNAME = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Tactu$massage2002")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "pablo@tactuswellness.com")
@@ -70,10 +71,11 @@ def contact():
         msg['From'] = SMTP_USERNAME
         msg['To'] = RECEIVER_EMAIL
 
-        # --- CORRECTED SECURE SMTP EXECUTOR ---
+        # --- CORRECTED SECURE SMTP EXECUTOR FOR PORT 2525 ---
         try:
-            # CRITICAL FIX: Swapped to SMTP_SSL and removed starttls() for Port 465
-            with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
+            # FIXED: Changed from SMTP_SSL to standard SMTP + starttls()
+            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+                server.starttls()  # Safely upgrades connection to secure TLS on port 2525
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
                 server.send_message(msg)
 
