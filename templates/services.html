@@ -1,12 +1,382 @@
 {% extends "layout.html" %}
-
+{% block title %}Services — Form.Rehab{% endblock %}
 {% block body %}
+<style>
+  .services-hero {
+    margin: -48px -24px 0;
+    padding: 52px 24px 36px;
+    text-align: center;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .services-hero h1 { margin-bottom: 10px; }
+  .services-hero p { color: var(--text-muted); font-weight: 300; max-width: 520px; margin: 0 auto; line-height: 1.7; }
 
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    margin: 44px 0 24px;
+  }
+  .section-header-icon {
+    width: 42px; height: 42px; flex-shrink: 0;
+    background: var(--grad); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; box-shadow: 0 4px 14px rgba(61,170,110,0.3);
+  }
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 400; color: var(--text); margin: 0;
+  }
+  .section-header p { color: var(--text-muted); font-size: 0.875rem; margin: 3px 0 0; font-weight: 300; }
 
+  /* ── CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .s-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.3s, transform 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .s-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: var(--grad); opacity: 0; transition: opacity 0.3s;
+  }
+  .s-card:hover { box-shadow: var(--card-shadow-hover); transform: translateY(-3px); }
+  .s-card:hover::before { opacity: 1; }
 
+  .s-card-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 400;
+    background: var(--grad);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; line-height: 1; margin-bottom: 8px;
+  }
+  .s-card h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    color: var(--text); margin-bottom: 10px;
+  }
+  .s-card p { font-size: 0.875rem; color: var(--text-muted); line-height: 1.65; font-weight: 300; }
+  .s-card-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sky); background: rgba(58,159,216,0.1);
+    padding: 3px 9px; border-radius: 20px; margin-top: 12px;
+  }
 
+  /* ── INSURANCE SECTION ── */
+  .insurance-banner {
+    background: var(--grad);
+    border-radius: 16px; padding: 28px 32px;
+    margin-bottom: 24px; color: #fff;
+    display: flex; align-items: center; gap: 20px;
+    flex-wrap: wrap;
+  }
+  .insurance-banner-icon {
+    width: 52px; height: 52px; background: rgba(255,255,255,0.2);
+    border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .insurance-banner h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 400; margin-bottom: 4px; }
+  .insurance-banner p { font-size: 0.875rem; opacity: 0.9; line-height: 1.5; margin: 0; font-weight: 300; }
+  .insurance-banner-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .ins-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.8rem; font-weight: 600;
+    background: rgba(255,255,255,0.2); color: #fff;
+    padding: 7px 14px; border-radius: 20px; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .ins-link:hover { background: rgba(255,255,255,0.35); }
 
+  /* ── HSA/FSA CARDS ── */
+  .payment-cards {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px; margin-bottom: 24px;
+  }
+  .pay-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px;
+    box-shadow: var(--card-shadow);
+  }
+  .pay-card-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .pay-chip {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+    padding: 4px 10px; border-radius: 8px;
+    background: var(--grad); color: #fff;
+  }
+  .pay-card h4 { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .pay-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; font-weight: 300; }
+
+  /* ── ACCORDION (OON / networks) ── */
+  .accordion { display: flex; flex-direction: column; gap: 8px; }
+  .acc-item {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+  .acc-trigger {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px; background: none; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+    color: var(--text); text-align: left; gap: 12px;
+    transition: background 0.15s;
+  }
+  .acc-trigger:hover { background: var(--surface); }
+  .acc-trigger svg { flex-shrink: 0; transition: transform 0.25s; color: var(--text-muted); }
+  .acc-trigger.open svg { transform: rotate(180deg); }
+  .acc-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.25s;
+    padding: 0 18px;
+  }
+  .acc-body.open { max-height: 600px; padding: 0 18px 16px; }
+  .acc-body p { font-size: 0.875rem; color: var(--text-muted); line-height: 1.65; font-weight: 300; }
+  .acc-body ul { margin: 8px 0 0 16px; }
+  .acc-body ul li { font-size: 0.86rem; color: var(--text-muted); line-height: 1.7; font-weight: 300; }
+
+  .alert-box {
+    background: rgba(58,159,216,0.08); border: 1px solid rgba(58,159,216,0.25);
+    border-radius: 12px; padding: 16px 18px;
+    display: flex; gap: 12px; align-items: flex-start; margin-top: 20px;
+  }
+  .alert-box svg { color: var(--sky); flex-shrink: 0; margin-top: 2px; }
+  .alert-box p { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; font-weight: 300; margin: 0; }
+  .alert-box strong { color: var(--text); font-weight: 600; }
+
+  .divider { height: 1px; background: var(--border); margin: 40px 0; }
+
+  @media (max-width: 600px) {
+    .services-hero { margin: -32px -16px 0; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .insurance-banner { flex-direction: column; }
+  }
+</style>
+
+<!-- HERO -->
+<section class="services-hero">
+  <h1 class="grad-text">Our Services</h1>
+  <p>From rehabilitation after injury to wellness and performance — we offer evidence-based massage therapy tailored to your recovery and goals.</p>
+</section>
+
+<!-- ═══ CLINICAL CONDITIONS ═══ -->
+<div class="section-header">
+  <div class="section-header-icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+  </div>
+  <div>
+    <h2>Wellness & Clinical Conditions</h2>
+    <p>Targeted treatment for specific conditions affecting your daily life and performance</p>
+  </div>
+</div>
+<div class="cards-grid">
+  <div class="s-card">
+    <div class="s-card-num">01</div>
+    <h3>Plantar Fasciitis</h3>
+    <p>Inflammation of the thick tissue on the bottom of the foot causing heel pain and stiffness — often worse in the morning. Treatment includes active release technique, foot/ankle massage, and targeted physical therapy.</p>
+    <div class="s-card-tag">Foot & Ankle</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-num">02</div>
+    <h3>Running Injuries</h3>
+    <p>Highly sought after by Olympians and recreational athletes alike. We assess injury chains, release tightness and scar tissue, and use rehabilitative exercise to restore strength and correct faulty biomechanics.</p>
+    <div class="s-card-tag">Sports Performance</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-num">03</div>
+    <h3>Shoulder Pain</h3>
+    <p>Our team specializes in shoulder conditions from personal high-level athletic experience. Treatment combines massage, active release technique, sport-specific physical therapy, and shoulder mobilization.</p>
+    <div class="s-card-tag">Upper Body</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-num">04</div>
+    <h3>Neck Pain</h3>
+    <p>Common in people with stressful jobs, long screen hours, or car accidents. We address posture, tension patterns, and injury with massage therapy, active release technique, and postural corrective exercise.</p>
+    <div class="s-card-tag">Upper Body</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-num">05</div>
+    <h3>Low Back Pain</h3>
+    <p>80% of the population suffers from this. Regardless of origin, we evaluate your condition and build a specific plan using massage therapy, active release technique, mechanical traction, and spinal stabilization.</p>
+    <div class="s-card-tag">Spine</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-num">06</div>
+    <h3>Hip Pain</h3>
+    <p>Pain may originate in the hip or be referred from the low back — a thorough evaluation of both is essential. Untreated, altered gait and compensation create cascading problems throughout the body.</p>
+    <div class="s-card-tag">Lower Body</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-num">07</div>
+    <h3>Headaches & Migraines</h3>
+    <p>80% of headaches originate from neck structures. Cervicogenic headaches are very responsive to physical medicine. Treatment includes massage techniques, active release, decompression, and postural correction.</p>
+    <div class="s-card-tag">Neurological</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-num">08</div>
+    <h3>Carpal Tunnel</h3>
+    <p>Often misdiagnosed — the source can be the neck or shoulder, not just the wrist. A detailed examination determines the true origin. Treatment includes active release, chiropractic adjustment, and ergonomic guidance.</p>
+    <div class="s-card-tag">Upper Extremity</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-num">09</div>
+    <h3>Poor Posture</h3>
+    <p>The hidden source of many pain complaints. Contributing to low back pain, headaches, and neck tension, poor posture is addressed with chiropractic adjustments, active release technique, and personalized education.</p>
+    <div class="s-card-tag">Postural</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ INJURY BILLING ═══ -->
+<div class="section-header">
+  <div class="section-header-icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+  </div>
+  <div>
+    <h2>Injury Billing</h2>
+    <p>Auto accidents and work injuries billed directly — no out-of-pocket expense</p>
+  </div>
+</div>
+<div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(340px,1fr));">
+  <div class="s-card">
+    <h3>🚗 Auto Accidents (PIP)</h3>
+    <p>Many accident victims don't feel symptoms for weeks or months after impact. <strong style="color:var(--text)">Do not sign anything</strong> with your insurance company before getting evaluated — once you settle, you lose the right to future treatment coverage.</p>
+    <p style="margin-top:10px;">We work with a network of medical doctors, attorneys, and therapists to ensure you receive the care and settlement you deserve. We bill your Auto Insurance directly with typically no out-of-pocket cost.</p>
+    <p style="margin-top:10px;font-size:0.82rem;color:var(--text-light);">Required: Auto insurance info · Physician/chiropractor referral · Claim/case number</p>
+    <div class="s-card-tag">Billed Directly</div>
+  </div>
+  <div class="s-card">
+    <h3>🏗️ Work Injury (L&I)</h3>
+    <p>If you've been injured at work, we coordinate with your referring physician or chiropractor to build a healing schedule for effective relief. Our therapeutic protocols have successfully returned clients to normal, productive lifestyles.</p>
+    <p style="margin-top:10px;">We bill your L&I / Work Injury carrier directly with typically no out-of-pocket cost.</p>
+    <p style="margin-top:10px;font-size:0.82rem;color:var(--text-light);">Required: Open L&I claim · L&I insurance info · Physician referral · Claims manager name & number · Date of injury</p>
+    <div class="s-card-tag">Billed Directly</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ INSURANCE ═══ -->
+<div class="section-header">
+  <div class="section-header-icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+  </div>
+  <div>
+    <h2>Insurance & Payment</h2>
+    <p>In-network with Moda Health and Regence BC/BS — plus HSA, FSA, HRA & HMA accepted</p>
+  </div>
+</div>
+
+<!-- In-Network Banner -->
+<div class="insurance-banner">
+  <div class="insurance-banner-icon">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+  </div>
+  <div style="flex:1;">
+    <h3>In-Network Provider</h3>
+    <p>Pablo Cohen (Tactus Massage & Wellness / Form.Rehab) participates directly with Moda Health and Regence BC/BS — including 22 Regence networks across Oregon, Washington, Idaho, and Utah.</p>
+    <div class="insurance-banner-links">
+      <a href="https://www.modahealth.com/zoomcare/provider-search/select-region" target="_blank" rel="noopener" class="ins-link">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Moda Health Coverage
+      </a>
+      <a href="https://providers.regence.com/healthsparq/public/#/one/insurerCode=RG_I&brandCode=RG" target="_blank" rel="noopener" class="ins-link">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Regence Coverage
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- HSA/FSA Cards -->
+<div class="payment-cards">
+  <div class="pay-card">
+    <div class="pay-card-chips">
+      <span class="pay-chip">HSA</span><span class="pay-chip">FSA</span>
+      <span class="pay-chip">HRA</span><span class="pay-chip">HMA</span>
+    </div>
+    <h4>Spending Account Cards Welcome</h4>
+    <p>Health spending account debit cards are accepted. Please verify your account covers massage therapy before your visit. If a card fails, I'll provide an HCFA-1500 form for direct reimbursement submission.</p>
+  </div>
+  <div class="pay-card">
+    <div class="pay-card-chips"><span class="pay-chip">FSA / HSA Tip</span></div>
+    <h4>Letter of Medical Necessity</h4>
+    <p>Many FSA/HSA plans require a Letter of Medical Necessity (LMN) to prove massage is treating a specific condition rather than general relaxation. Ask your physician for one before your first visit.</p>
+  </div>
+</div>
+
+<!-- OON Accordion -->
+<div class="accordion">
+  <div class="acc-item">
+    <button class="acc-trigger" onclick="toggleAcc(this)">
+      Out-of-Network Reimbursement (PPO Plans)
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="acc-body">
+      <p>Clients with PPO plans may pay the cash rate upfront and submit a Superbill (with CPT codes 97124 or 97140) for partial reimbursement from:</p>
+      <ul>
+        <li><strong>UnitedHealthcare (UHC)</strong> — Choice Plus and top-tier PPO plans with medical necessity</li>
+        <li><strong>Aetna</strong> — PPO plans; many require service inside a DC/PT office</li>
+        <li><strong>Cigna</strong> — When documented as part of an active physical therapy plan</li>
+        <li><strong>Kaiser PPO Plus</strong> — Self-referred rider covering up to 40% for ~12 visits/year</li>
+        <li><strong>Providence Health Plan</strong> — Fully funded PPO plans with rigorous medical documentation</li>
+      </ul>
+    </div>
+  </div>
+  <div class="acc-item">
+    <button class="acc-trigger" onclick="toggleAcc(this)">
+      Plans That Include Massage as a Benefit
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="acc-body">
+      <ul>
+        <li><strong>Regence BCBS / Anthem BCBS</strong> — Alternative care rider; fixed copay for 12–24 visits/year</li>
+        <li><strong>Moda Health & PacificSource</strong> — "Plus" or "AHP" employer plans with dedicated massage benefits</li>
+        <li><strong>Compass Rose (UHC)</strong> — Federal employees' High Option plan; no specialist referral required</li>
+        <li><strong>TriWest / VA CCN</strong> — Fully covered when authorized by a VA physician</li>
+        <li><strong>Medicare Advantage (Part C)</strong> — Select plans include therapeutic massage as a wellness benefit</li>
+      </ul>
+    </div>
+  </div>
+  <div class="acc-item">
+    <button class="acc-trigger" onclick="toggleAcc(this)">
+      Important Billing Realities to Know
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="acc-body">
+      <ul>
+        <li><strong>The "Under Supervision" trap</strong> — Some plans require billing under a DC or PT NPI; independent LMTs see these claims denied</li>
+        <li><strong>Deductible barriers</strong> — OON benefits don't pay until your full OON deductible is met for the year</li>
+        <li><strong>Third-party administrators</strong> — eviCore and ASH often require prior authorization every 4–6 sessions</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="alert-box">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <p><strong>Questions about your coverage?</strong> Proactively verifying your benefits before your visit is essential. Contact us and we can provide a verification script for calling your insurance company or help you format a compliant Superbill template.</p>
+</div>
+
+<script>
+function toggleAcc(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.acc-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.acc-trigger').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    body.classList.add('open');
+    btn.classList.add('open');
+  }
+}
+</script>
 {% endblock %}
-
-
-
