@@ -7,7 +7,6 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 # --- FIXED NETWORK SOLUTIONS CONFIGURATION ---
-# FIXED: Removed the accidental '://' protocol characters
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.networksolutionsemail.com")
 
 # Force 2525 if Coolify sends an encrypted string
@@ -106,6 +105,7 @@ def contact():
             flash('An error occurred while sending your message.', 'danger')
             return render_template('contact.html')
 
+    # GET request handler: Renders the clean contact layout template file safely
     return render_template('contact.html')
 
 if __name__ == "__main__":
