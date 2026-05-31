@@ -48,26 +48,32 @@ def contact():
         # Safely handle both JSON/AJAX and standard HTML form payloads
         if request.is_json:
             data = request.get_json()
-            first_name = data.get('first_name', '')
+            # Fallback chains check for both 'first_name' and generic 'name' keys
+            first_name = data.get('first_name') or data.get('name') or ''
             last_name = data.get('last_name', '')
             email = data.get('email', '')
-            phone = data.get('phone', '')
+            phone = data.get('phone') or data.get('phone_optional', '')
             subject = data.get('subject', 'Other')
             message = data.get('message', '')
             is_ajax = True
         else:
-            first_name = request.form.get('first_name', '')
+            first_name = request.form.get('first_name') or request.form.get('name') or ''
             last_name = request.form.get('last_name', '')
             email = request.form.get('email', '')
-            phone = request.form.get('phone', '')
+            phone = request.form.get('phone') or request.form.get('phone_optional', '')
             subject = request.form.get('subject', 'Other')
             message = request.form.get('message', '')
             is_ajax = False
 
+        # Clean up strings by stripping unexpected trailing whitespaces
+        first_name = str(first_name).strip()
+        email = str(email).strip()
+        message = str(message).strip()
+
         if not first_name or not email or not message:
             if is_ajax:
-                return jsonify({'ok': False, 'error': 'Required fields are missing'}), 400
-            flash('First Name, Email, and Message are required!', 'danger')
+                return jsonify({'ok': False, 'error': 'Required fields (Name, Email, Message) are missing'}), 400
+            flash('Name, Email, and Message are required fields!', 'danger')
             return render_template('contact.html')
 
         # Draft a clean email layout containing all your new form data
@@ -105,8 +111,8 @@ def contact():
             flash('An error occurred while sending your message.', 'danger')
             return render_template('contact.html')
 
-    # GET request handler: Renders the clean contact layout template file safely
     return render_template('contact.html')
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
