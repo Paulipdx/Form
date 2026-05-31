@@ -8,7 +8,7 @@ app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 # --- CORRECTED NETWORK SOLUTIONS CONFIGURATION ---
 # Note: Network Solutions default SMTP server string is listed below
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.networksolutionsemail.com") 
+SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.domain.com") 
 SMTP_PORT = int(os.getenv("SMTP_PORT", 465)) # Port 465 requires Implicit SSL initialization
 SMTP_USERNAME = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Tactu$massage2002")
