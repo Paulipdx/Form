@@ -6,10 +6,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
-# --- CORRECTED NETWORK SOLUTIONS CONFIGURATION ---
-# Note: Network Solutions default SMTP server string is listed below
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.domain.com") 
-SMTP_PORT = int(os.getenv("SMTP_PORT", 465)) # Port 465 requires Implicit SSL initialization
+# --- FIXED NETWORK SOLUTIONS CONFIGURATION ---
+SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.networksolutionsemail.com") # Changed placeholder
+SMTP_PORT = int(os.getenv("SMTP_PORT", 465))                             # Safe SSL wrapper port
 SMTP_USERNAME = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Tactu$massage2002")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "pablo@tactuswellness.com")
@@ -65,26 +64,24 @@ def contact():
         msg['From'] = SMTP_USERNAME
         msg['To'] = RECEIVER_EMAIL
 
-        # --- CORRECTED SMTP CONNECTION METHOD ---
-          # Send the email via Network Solutions SMTP (SSL Port 465)
+        # --- CORRECTED SECURE SMTP EXECUTOR ---
         try:
-            # CRITICAL: Changed from smtplib.SMTP to smtplib.SMTP_SSL for Port 465
+            # CRITICAL FIX: Swapped to SMTP_SSL and removed starttls() for Port 465
             with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
                 server.send_message(msg)
-            
+
             if is_ajax:
                 return jsonify({'ok': True, 'message': 'Email sent successfully!'})
             flash('Your message has been sent successfully!', 'success')
             return redirect(url_for('contact'))
-            
+
         except Exception as e:
-            print(f"SMTP Error: {e}")
+            print(f"SMTP Error Logged: {e}")
             if is_ajax:
-                return jsonify({'ok': False, 'error': f'Failed to send email: {str(e)}'})
+                return jsonify({'ok': False, 'error': f'Failed to send email: {str(e)}'}), 500
             flash('An error occurred while sending your message.', 'danger')
             return render_template('contact.html')
-
 
     # GET request: Render the contact page
     return render_template('contact.html')
