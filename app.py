@@ -8,7 +8,7 @@ app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 # --- FIXED NETWORK SOLUTIONS CONFIGURATION ---
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.networksolutionsemail.com") # Changed placeholder
-SMTP_PORT = int(os.getenv("SMTP_PORT", 465))                             # Safe SSL wrapper port
+SMTP_PORT = int(os.getenv("SMTP_PORT", 465))                             
 SMTP_USERNAME = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Tactu$massage2002")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "pablo@tactuswellness.com")
