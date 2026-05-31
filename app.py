@@ -10,7 +10,7 @@ app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.domain.com")  # Use your actual host name here
 SMTP_PORT = int(os.getenv("SMTP_PORT", 465))              # Set to 465 for implicit SSL
 SMTP_USERNAME = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Your mailbox password")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Tactu$massage2002")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "pablo@tactuswellness.com")
 
 @app.get("/healthz")
