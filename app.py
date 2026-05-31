@@ -44,38 +44,52 @@ def shop():
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    # Handle HTML form submissions and AJAX requests
     if request.method == 'POST':
+        # Safely handle both JSON/AJAX and standard HTML form payloads
         if request.is_json:
             data = request.get_json()
-            name = data.get('name')
-            email = data.get('email')
-            message = data.get('message')
+            first_name = data.get('first_name', '')
+            last_name = data.get('last_name', '')
+            email = data.get('email', '')
+            phone = data.get('phone', '')
+            subject = data.get('subject', 'Other')
+            message = data.get('message', '')
             is_ajax = True
         else:
-            name = request.form.get('name')
-            email = request.form.get('email')
-            message = request.form.get('message')
+            first_name = request.form.get('first_name', '')
+            last_name = request.form.get('last_name', '')
+            email = request.form.get('email', '')
+            phone = request.form.get('phone', '')
+            subject = request.form.get('subject', 'Other')
+            message = request.form.get('message', '')
             is_ajax = False
 
-        if not name or not email or not message:
+        if not first_name or not email or not message:
             if is_ajax:
-                return jsonify({'ok': False, 'error': 'All fields are required'}), 400
-            flash('All fields are required!', 'danger')
+                return jsonify({'ok': False, 'error': 'Required fields are missing'}), 400
+            flash('First Name, Email, and Message are required!', 'danger')
             return render_template('contact.html')
 
-        # Draft the email content
-        email_content = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+        # Draft a clean email layout containing all your new form data
+        email_content = (
+            f"New Web Inquiry\n"
+            f"---------------------------\n"
+            f"Name: {first_name} {last_name}\n"
+            f"Email: {email}\n"
+            f"Phone: {phone}\n"
+            f"Topic: {subject}\n\n"
+            f"Message:\n{message}"
+        )
+        
         msg = MIMEText(email_content)
-        msg['Subject'] = f"New Contact Form Submission from {name}"
+        msg['Subject'] = f"Contact Form: {subject} (from {first_name})"
         msg['From'] = SMTP_USERNAME
         msg['To'] = RECEIVER_EMAIL
 
-        # --- CORRECTED SECURE SMTP EXECUTOR FOR PORT 2525 ---
+        # Outbound Cloud Delivery Engine (Port 2525)
         try:
-            # FIXED: Changed from SMTP_SSL to standard SMTP + starttls()
             with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-                server.starttls()  # Safely upgrades connection to secure TLS on port 2525
+                server.starttls()
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
                 server.send_message(msg)
 
@@ -87,12 +101,12 @@ def contact():
         except Exception as e:
             print(f"SMTP Error Logged: {e}")
             if is_ajax:
-                return jsonify({'ok': False, 'error': f'Failed to send email: {str(e)}'}), 500
+                return jsonify({'ok': False, 'error': f'Server Mail Error: {str(e)}'}), 500
             flash('An error occurred while sending your message.', 'danger')
             return render_template('contact.html')
 
-    # GET request: Render the contact page
     return render_template('contact.html')
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
