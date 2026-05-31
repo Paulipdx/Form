@@ -2,6 +2,9 @@ from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm             
 import wtforms                   
+from flask import request, jsonify
+import smtplib
+from email.mime.text import MIMEText
 
 # Initialize your app
 app = Flask(__name__)
@@ -34,9 +37,11 @@ def services():
 def shop():
     return render_template('shop.html')
 
-@app.route("/contact")
+@app.route('/contact', methods=['POST'])
 def contact():
-    return render_template('contact.html')
+    data = request.get_json()
+    # wire up your email here
+    return jsonify({'ok': True})
 
 
 
