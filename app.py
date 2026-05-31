@@ -6,12 +6,12 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
-# Email configuration (Use environment variables for security)
-SMTP_SERVER = os.getenv("SMTP_SERVER", "://gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
-SMTP_USERNAME = os.getenv("SMTP_USERNAME", "your-email@gmail.com")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "your-app-password")
-RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "your-email@gmail.com")
+# Network Solutions SMTP Configuration
+SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.domain.com")  # Use your actual host name here
+SMTP_PORT = int(os.getenv("SMTP_PORT", 465))              # Set to 465 for implicit SSL
+SMTP_USERNAME = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Your mailbox password")
+RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "pablo@tactuswellness.com")
 
 @app.get("/healthz")
 def healthz():
