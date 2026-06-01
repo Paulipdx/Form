@@ -45,11 +45,10 @@ def shop():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        # Safely handle both JSON/AJAX and standard HTML form payloads
-       if request.is_json:  # ← must align with the line below it
+        if request.is_json:
             data = request.get_json()
             first_name = data.get('firstName') or data.get('first_name') or data.get('name') or ''
-            last_name = data.get('lastName') or data.get('last_name', '')
+            last_name = data.get('lastName') or data.get('last_name') or ''
             email = data.get('email', '')
             phone = data.get('phone') or data.get('phone_optional', '')
             subject = data.get('subject', 'Other')
@@ -64,18 +63,16 @@ def contact():
             message = request.form.get('message', '')
             is_ajax = False
 
-        # Clean up strings by stripping unexpected trailing whitespaces
         first_name = str(first_name).strip()
         email = str(email).strip()
         message = str(message).strip()
 
         if not first_name or not email or not message:
             if is_ajax:
-                return jsonify({'ok': False, 'error': 'Required fields (Name, Email, Message) are missing'}), 400
-            flash('Name, Email, and Message are required fields!', 'danger')
+                return jsonify({'ok': False, 'error': 'Required fields missing'}), 400
+            flash('Name, Email, and Message are required!', 'danger')
             return render_template('contact.html')
 
-        # Draft a clean email layout containing all your new form data
         email_content = (
             f"New Web Inquiry\n"
             f"---------------------------\n"
@@ -85,29 +82,26 @@ def contact():
             f"Topic: {subject}\n\n"
             f"Message:\n{message}"
         )
-        
+
         msg = MIMEText(email_content)
         msg['Subject'] = f"Contact Form: {subject} (from {first_name})"
         msg['From'] = SMTP_USERNAME
         msg['To'] = RECEIVER_EMAIL
 
-        # Outbound Cloud Delivery Engine (Port 2525)
         try:
             with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
                 server.starttls()
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
                 server.send_message(msg)
-
             if is_ajax:
                 return jsonify({'ok': True, 'message': 'Email sent successfully!'})
-            flash('Your message has been sent successfully!', 'success')
+            flash('Your message has been sent!', 'success')
             return redirect(url_for('contact'))
-
         except Exception as e:
-            print(f"SMTP Error Logged: {e}")
+            print(f"SMTP Error: {e}")
             if is_ajax:
-                return jsonify({'ok': False, 'error': f'Server Mail Error: {str(e)}'}), 500
-            flash('An error occurred while sending your message.', 'danger')
+                return jsonify({'ok': False, 'error': str(e)}), 500
+            flash('Error sending message.', 'danger')
             return render_template('contact.html')
 
     return render_template('contact.html')
