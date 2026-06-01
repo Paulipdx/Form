@@ -3,6 +3,7 @@ import urllib.request
 import urllib.error
 import json
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+import base64
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
@@ -39,32 +40,36 @@ def shop():
     return render_template('shop.html')
 
 
-import base64
+
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
 
-        # Detect JSON vs form
+        # Detect JSON vs FormData
         if request.is_json:
             data = request.get_json()
             first_name = data.get('firstName') or data.get('first_name') or data.get('name') or ''
-            last_name = data.get('lastName') or data.get('last_name') or ''
+            last_name = data.get('lastName') or data.get('last_name', '')
             email = data.get('email', '')
             phone = data.get('phone') or data.get('phone_optional', '')
             subject = data.get('subject', 'Other')
             message = data.get('message', '')
-            uploaded_file = None
+            uploaded_files = []  # JSON cannot send files
             is_ajax = True
+
         else:
-            first_name = request.form.get('first_name') or request.form.get('name') or ''
-            last_name = request.form.get('last_name', '')
+            first_name = request.form.get('firstName') or request.form.get('first_name') or request.form.get('name') or ''
+            last_name = request.form.get('lastName') or request.form.get('last_name', '')
             email = request.form.get('email', '')
             phone = request.form.get('phone') or request.form.get('phone_optional', '')
             subject = request.form.get('subject', 'Other')
             message = request.form.get('message', '')
+
+            # 👉 MULTIPLE FILES COME FROM HERE
             uploaded_files = request.files.getlist('attachments')
-            is_ajax = False
+
+            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
         # Validation
         if not first_name or not email or not message:
@@ -73,7 +78,7 @@ def contact():
             flash('Name, Email, and Message are required!', 'danger')
             return render_template('contact.html')
 
-        # Build email content
+        # Build email text
         email_content = (
             f"New Web Inquiry\n"
             f"---------------------------\n"
@@ -84,7 +89,7 @@ def contact():
             f"Message:\n{message}"
         )
 
-        # Build SendGrid payload
+        # Base SendGrid payload
         payload_dict = {
             "personalizations": [{"to": [{"email": RECEIVER_EMAIL}]}],
             "from": {"email": FROM_EMAIL},
@@ -92,21 +97,27 @@ def contact():
             "content": [{"type": "text/plain", "value": email_content}]
         }
 
-        # Handle attachment if present
-        if uploaded_file and uploaded_file.filename:
-            file_data = uploaded_file.read()
-            encoded = base64.b64encode(file_data).decode()
+        # 👉 ATTACHMENTS HANDLING (MULTIPLE)
+        attachments_list = []
+        for f in uploaded_files:
+            if f and f.filename:
+                file_bytes = f.read()
+                encoded = base64.b64encode(file_bytes).decode()
 
-            payload_dict["attachments"] = [{
-                "content": encoded,
-                "type": uploaded_file.mimetype,
-                "filename": uploaded_file.filename,
-                "disposition": "attachment"
-            }]
+                attachments_list.append({
+                    "content": encoded,
+                    "type": f.mimetype,
+                    "filename": f.filename,
+                    "disposition": "attachment"
+                })
 
+        if attachments_list:
+            payload_dict["attachments"] = attachments_list
+
+        # 👉 FINAL JSON PAYLOAD
         payload = json.dumps(payload_dict).encode("utf-8")
 
-        # Send request
+        # SendGrid request
         req = urllib.request.Request(
             "https://api.sendgrid.com/v3/mail/send",
             data=payload,
@@ -120,16 +131,20 @@ def contact():
         try:
             with urllib.request.urlopen(req) as resp:
                 print(f"SendGrid response {resp.status}")
+
             if is_ajax:
                 return jsonify({'ok': True, 'message': 'Email sent successfully!'})
+
             flash('Your message has been sent!', 'success')
             return redirect(url_for('contact'))
 
         except urllib.error.HTTPError as e:
             body = e.read().decode()
             print(f"SendGrid Error {e.code}: {body}")
+
             if is_ajax:
                 return jsonify({'ok': False, 'error': f'SendGrid {e.code}: {body}'}), 500
+
             flash('Error sending message.', 'danger')
             return render_template('contact.html')
 
