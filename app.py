@@ -46,11 +46,10 @@ def shop():
 def contact():
     if request.method == 'POST':
         # Safely handle both JSON/AJAX and standard HTML form payloads
-        if request.is_json:
+       if request.is_json:
             data = request.get_json()
-            # Fallback chains check for both 'first_name' and generic 'name' keys
-            first_name = data.get('first_name') or data.get('name') or ''
-            last_name = data.get('last_name', '')
+            first_name = data.get('firstName') or data.get('first_name') or data.get('name') or ''
+            last_name = data.get('lastName') or data.get('last_name', '')
             email = data.get('email', '')
             phone = data.get('phone') or data.get('phone_optional', '')
             subject = data.get('subject', 'Other')
