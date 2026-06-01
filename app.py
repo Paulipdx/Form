@@ -1,5 +1,6 @@
 import os
 import smtplib
+import ssl
 from email.mime.text import MIMEText
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 
@@ -7,13 +8,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.domain.com")
-
-raw_port = os.getenv("SMTP_PORT", "465")
-if not raw_port or "<REDACTED>" in str(raw_port) or not str(raw_port).isdigit():
-    SMTP_PORT = 465
-else:
-    SMTP_PORT = int(raw_port)
-
+SMTP_PORT = 587
 SMTP_USERNAME = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Tactu$massage2002")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "pablo@tactuswellness.com")
@@ -94,9 +89,14 @@ def contact():
 
         try:
             print(f"DEBUG: Connecting to {SMTP_SERVER}:{SMTP_PORT} as {SMTP_USERNAME}")
-            with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
+            context = ssl.create_default_context()
+            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=30) as server:
+                server.ehlo()
+                server.starttls(context=context)
+                server.ehlo()
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
                 server.send_message(msg)
+            print("DEBUG: Email sent successfully")
             if is_ajax:
                 return jsonify({'ok': True, 'message': 'Email sent successfully!'})
             flash('Your message has been sent!', 'success')
