@@ -93,9 +93,9 @@ def contact():
         msg['To'] = RECEIVER_EMAIL
 
         try:
+           try:
             print(f"DEBUG: Connecting to {SMTP_SERVER}:{SMTP_PORT} as {SMTP_USERNAME}")
-            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-                server.starttls()
+            with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
                 server.send_message(msg)
             if is_ajax:
