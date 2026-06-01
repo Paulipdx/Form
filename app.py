@@ -6,10 +6,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
-# --- FIXED NETWORK SOLUTIONS CONFIGURATION ---
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.networksolutionsemail.com")
 
-# Force 2525 if Coolify sends an encrypted string
 raw_port = os.getenv("SMTP_PORT", "2525")
 if not raw_port or "<REDACTED>" in str(raw_port) or not str(raw_port).isdigit():
     SMTP_PORT = 2525
@@ -20,9 +18,11 @@ SMTP_USERNAME = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Tactu$massage2002")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "pablo@tactuswellness.com")
 
+
 @app.get("/healthz")
 def healthz():
     return jsonify(status="ok"), 200
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -30,17 +30,21 @@ def index():
         return render_template("greet.html", name=request.form.get("name", "World"))
     return render_template("index.html")
 
+
 @app.route("/about")
 def about():
     return render_template('about.html')
+
 
 @app.route("/services")
 def services():
     return render_template('services.html')
 
+
 @app.route("/shop")
 def shop():
     return render_template('shop.html')
+
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -104,6 +108,7 @@ def contact():
                 return jsonify({'ok': False, 'error': str(e)}), 500
             flash('Error sending message.', 'danger')
             return render_template('contact.html')
+
     return render_template('contact.html')
 
 
