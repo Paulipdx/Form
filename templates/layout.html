@@ -457,11 +457,13 @@
   .footer-links a:hover { color: var(--emerald); }
 
   /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
     .nav-book-center { display: none; }
     .nav-chat-btn { display: none; }
-    nav { padding: 0 16px; }
-    .nav-right { margin-left: auto; }
+    nav { padding: 0 16px; flex-wrap: nowrap; }
+    .nav-right { margin-left: auto; flex-shrink: 0; }
+    .nav-logo-text { font-size: 0.95rem; }
+    .nav-logo { height: 32px; }
   }
   
   @media (max-width: 600px) {
