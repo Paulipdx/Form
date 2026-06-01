@@ -20,7 +20,6 @@
   }
   @media (max-width: 760px) { .contact-grid { grid-template-columns: 1fr; } }
 
-  /* ── CARD ── */
   .c-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -38,7 +37,6 @@
   }
   .c-card h2 svg { color: var(--emerald); flex-shrink: 0; }
 
-  /* INFO ROWS */
   .info-row {
     display: flex; align-items: flex-start; gap: 12px;
     margin-bottom: 16px; font-size: 0.9rem;
@@ -56,7 +54,6 @@
   .info-value a { color: var(--emerald); text-decoration: none; }
   .info-value a:hover { text-decoration: underline; }
 
-  /* HOURS */
   .hours-grid { display: grid; gap: 6px; }
   .hours-row {
     display: flex; justify-content: space-between; align-items: center;
@@ -76,17 +73,13 @@
     color: #fff; padding: 2px 7px; border-radius: 10px; margin-left: 6px;
   }
 
-  /* MAP */
   .map-wrap {
     margin-top: 16px;
     border-radius: 12px; overflow: hidden;
     border: 1px solid var(--border);
     position: relative;
   }
-  .map-wrap iframe {
-    width: 100%; height: 220px; border: none; display: block;
-    transition: height 0.4s ease;
-  }
+  .map-wrap iframe { width: 100%; height: 220px; border: none; display: block; transition: height 0.4s ease; }
   .map-wrap.expanded iframe { height: 380px; }
   .map-expand-btn {
     position: absolute; bottom: 10px; right: 10px;
@@ -103,7 +96,6 @@
   }
   .map-expand-btn:hover { background: var(--surface); }
 
-  /* FORM */
   .form-grid { display: grid; gap: 16px; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
@@ -131,6 +123,48 @@
   .field textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
   .field input::placeholder, .field textarea::placeholder { color: var(--text-light); }
 
+  /* FILE UPLOAD */
+  .file-upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: var(--input-bg);
+    position: relative;
+  }
+  .file-upload-area:hover, .file-upload-area.dragover {
+    border-color: var(--emerald);
+    background: rgba(61,170,110,0.04);
+  }
+  .file-upload-area input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .file-upload-icon { color: var(--emerald); margin-bottom: 8px; }
+  .file-upload-text { font-size: 0.85rem; color: var(--text-muted); }
+  .file-upload-text span { color: var(--emerald); font-weight: 600; }
+  .file-upload-hint { font-size: 0.72rem; color: var(--text-light); margin-top: 4px; }
+
+  .file-list { margin-top: 10px; display: grid; gap: 6px; }
+  .file-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.82rem;
+  }
+  .file-item-name { flex: 1; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-item-size { color: var(--text-light); font-size: 0.72rem; flex-shrink: 0; }
+  .file-item-remove {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-light); padding: 2px;
+    border-radius: 4px; flex-shrink: 0;
+    transition: color 0.15s;
+  }
+  .file-item-remove:hover { color: #e55; }
+
   .submit-btn {
     width: 100%; padding: 13px;
     font-family: 'DM Sans', sans-serif;
@@ -143,6 +177,7 @@
     display: flex; align-items: center; justify-content: center; gap: 8px;
   }
   .submit-btn:hover { background: var(--grad-hover); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(61,170,110,0.35); }
+  .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
   .form-success {
     display: none; text-align: center;
@@ -161,7 +196,6 @@
   }
 </style>
 
-<!-- HERO -->
 <section class="contact-hero">
   <h1 class="grad-text">Get in Touch</h1>
   <p>We'd love to hear from you. Send us a message and we'll get back to you promptly.</p>
@@ -169,63 +203,42 @@
 
 <div class="contact-grid">
 
-  <!-- LEFT COL: INFO + HOURS + MAP -->
   <div style="display:flex;flex-direction:column;gap:24px;">
-
-    <!-- Contact Info -->
     <div class="c-card">
       <h2>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
         Contact Information
       </h2>
-
       <div class="info-row">
-        <div class="info-icon">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        </div>
+        <div class="info-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
         <div class="info-content">
           <div class="info-label">Address</div>
           <div class="info-value">1842 NW 25th Ave, Suite C3<br>Portland, Oregon 97210</div>
         </div>
       </div>
-
       <div class="info-row">
-        <div class="info-icon">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.59 1.32h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        </div>
+        <div class="info-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.59 1.32h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
         <div class="info-content">
           <div class="info-label">Phone / Text</div>
           <div class="info-value"><a href="tel:9712000553">971-200-0553</a></div>
         </div>
       </div>
-
       <div class="info-row">
-        <div class="info-icon">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-        </div>
+        <div class="info-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
         <div class="info-content">
           <div class="info-label">Fax</div>
           <div class="info-value">503-296-5362</div>
         </div>
       </div>
-
       <div class="info-row">
-        <div class="info-icon">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
+        <div class="info-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
         <div class="info-content">
           <div class="info-label">Email</div>
           <div class="info-value"><a href="mailto:pablo@tactuswellness.com">pablo@tactuswellness.com</a></div>
         </div>
       </div>
-
-      <!-- Map -->
       <div class="map-wrap" id="mapWrap">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2795.1!2d-122.6938!3d45.5348!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5495a0a6c5555555%3A0x1!2s1842+NW+25th+Ave%2C+Portland%2C+OR+97210!5e0!3m2!1sen!2sus!4v1"
-          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          title="Form.Rehab Location">
-        </iframe>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2795.1!2d-122.6938!3d45.5348!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5495a0a6c5555555%3A0x1!2s1842+NW+25th+Ave%2C+Portland%2C+OR+97210!5e0!3m2!1sen!2sus!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Form.Rehab Location"></iframe>
         <button class="map-expand-btn" id="mapToggle" onclick="toggleMap()">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           Expand Map
@@ -233,7 +246,6 @@
       </div>
     </div>
 
-    <!-- Hours -->
     <div class="c-card">
       <h2>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -241,10 +253,8 @@
       </h2>
       <div class="hours-grid" id="hoursGrid"></div>
     </div>
-
   </div>
 
-  <!-- RIGHT COL: CONTACT FORM -->
   <div class="c-card">
     <h2>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -287,7 +297,22 @@
           <label>Message</label>
           <textarea id="message" placeholder="How can we help you?"></textarea>
         </div>
-        <button class="submit-btn" onclick="submitForm()">
+
+        <!-- FILE UPLOAD -->
+        <div class="field">
+          <label>Attachments (optional — up to 5 files)</label>
+          <div class="file-upload-area" id="dropZone">
+            <input type="file" id="fileInput" multiple accept="*/*" onchange="handleFiles(this.files)">
+            <div class="file-upload-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div class="file-upload-text"><span>Click to upload</span> or drag and drop</div>
+            <div class="file-upload-hint">Insurance cards, intake forms, images — any file type</div>
+          </div>
+          <div class="file-list" id="fileList"></div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="submitForm()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           Send Message
         </button>
@@ -316,19 +341,15 @@ const hours = [
   { day: 'Saturday',  time: '8:00 AM – 12:00 PM',  closed: false },
   { day: 'Sunday',    time: '8:00 AM – 1:00 PM',   closed: false },
 ];
-
-const todayIdx = new Date().getDay(); // 0=Sun,1=Mon...
-const reordered = [1,2,3,4,5,6,0]; // Mon first
-
+const todayIdx = new Date().getDay();
+const reordered = [1,2,3,4,5,6,0];
 const grid = document.getElementById('hoursGrid');
 hours.forEach((h, i) => {
   const jsDay = reordered[i];
   const isToday = jsDay === todayIdx;
   const row = document.createElement('div');
   row.className = 'hours-row' + (h.closed ? ' closed' : '') + (isToday ? ' today' : '');
-  row.innerHTML =
-    '<span class="hours-day">' + h.day + (isToday ? '<span class="today-badge">Today</span>' : '') + '</span>' +
-    '<span class="hours-time">' + h.time + '</span>';
+  row.innerHTML = '<span class="hours-day">' + h.day + (isToday ? '<span class="today-badge">Today</span>' : '') + '</span><span class="hours-time">' + h.time + '</span>';
   grid.appendChild(row);
 });
 
@@ -342,6 +363,52 @@ function toggleMap() {
     : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg> Expand Map';
 }
 
+// ── FILE UPLOAD ──
+let selectedFiles = [];
+
+function handleFiles(newFiles) {
+  for (const f of newFiles) {
+    if (selectedFiles.length >= 5) { alert('Maximum 5 files allowed.'); break; }
+    if (!selectedFiles.find(x => x.name === f.name && x.size === f.size)) {
+      selectedFiles.push(f);
+    }
+  }
+  renderFileList();
+}
+
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  list.innerHTML = '';
+  selectedFiles.forEach((f, i) => {
+    const size = f.size < 1024*1024 ? (f.size/1024).toFixed(0)+'KB' : (f.size/1024/1024).toFixed(1)+'MB';
+    const item = document.createElement('div');
+    item.className = 'file-item';
+    item.innerHTML = `
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span class="file-item-name">${f.name}</span>
+      <span class="file-item-size">${size}</span>
+      <button class="file-item-remove" onclick="removeFile(${i})" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>`;
+    list.appendChild(item);
+  });
+}
+
+function removeFile(i) {
+  selectedFiles.splice(i, 1);
+  renderFileList();
+}
+
+// Drag and drop
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
 // ── FORM SUBMIT ──
 async function submitForm() {
   const firstName = document.getElementById('firstName').value.trim();
@@ -353,31 +420,38 @@ async function submitForm() {
     return;
   }
 
-const payload = {
-    first_name: firstName,
-    last_name:  document.getElementById('lastName').value.trim(),
-    email,
-    phone:      document.getElementById('phone').value.trim(),
-    subject:    document.getElementById('subject').value,
-    message,
-  };
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Sending…';
 
-  // Send via Formspree (replace YOUR_FORM_ID with your Formspree form ID)
-  // Or wire to your own Flask route below
+  const formData = new FormData();
+  formData.append('firstName', firstName);
+  formData.append('lastName', document.getElementById('lastName').value.trim());
+  formData.append('email', email);
+  formData.append('phone', document.getElementById('phone').value.trim());
+  formData.append('subject', document.getElementById('subject').value);
+  formData.append('message', message);
+  selectedFiles.forEach(f => formData.append('attachments', f));
+
   try {
     const res = await fetch('/contact', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-      body: JSON.stringify(payload)
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      body: formData
     });
     if (res.ok) {
       document.getElementById('contactForm').style.display = 'none';
       document.getElementById('formSuccess').style.display = 'block';
     } else {
-      alert('Something went wrong. Please email us directly at pablo@tactuswellness.com');
+      const data = await res.json().catch(() => ({}));
+      alert('Something went wrong: ' + (data.error || 'Please email us at pablo@tactuswellness.com'));
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Message';
     }
   } catch {
-    alert('Something went wrong. Please email us directly at pablo@tactuswellness.com');
+    alert('Something went wrong. Please email us at pablo@tactuswellness.com');
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Message';
   }
 }
 </script>
