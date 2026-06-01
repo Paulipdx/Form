@@ -1,16 +1,14 @@
 import os
-import smtplib
-import ssl
-from email.mime.text import MIMEText
+import urllib.request
+import urllib.error
+import json
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.domain.com")
-SMTP_PORT = 587
-SMTP_USERNAME = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "Tactu$massage2002")
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", "")
+FROM_EMAIL = os.getenv("SMTP_USERNAME", "pablo@tactuswellness.com")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "pablo@tactuswellness.com")
 
 
@@ -82,29 +80,40 @@ def contact():
             f"Message:\n{message}"
         )
 
-        msg = MIMEText(email_content)
-        msg['Subject'] = f"Contact Form: {subject} (from {first_name})"
-        msg['From'] = SMTP_USERNAME
-        msg['To'] = RECEIVER_EMAIL
+        payload = json.dumps({
+            "personalizations": [{"to": [{"email": RECEIVER_EMAIL}]}],
+            "from": {"email": FROM_EMAIL},
+            "subject": f"Contact Form: {subject} (from {first_name})",
+            "content": [{"type": "text/plain", "value": email_content}]
+        }).encode("utf-8")
+
+        req = urllib.request.Request(
+            "https://api.sendgrid.com/v3/mail/send",
+            data=payload,
+            headers={
+                "Authorization": f"Bearer {SENDGRID_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            method="POST"
+        )
 
         try:
-            print(f"DEBUG: Connecting to {SMTP_SERVER}:{SMTP_PORT} as {SMTP_USERNAME}")
-            context = ssl.create_default_context()
-            context.check_hostname = False
-            context.verify_mode = ssl.CERT_NONE
-            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=30) as server:
-                server.ehlo()
-                server.starttls(context=context)
-                server.ehlo()
-                server.login(SMTP_USERNAME, SMTP_PASSWORD)
-                server.send_message(msg)
-            print("DEBUG: Email sent successfully")
+            print(f"DEBUG: Sending via SendGrid from {FROM_EMAIL} to {RECEIVER_EMAIL}")
+            with urllib.request.urlopen(req) as resp:
+                print(f"DEBUG: SendGrid response {resp.status}")
             if is_ajax:
                 return jsonify({'ok': True, 'message': 'Email sent successfully!'})
             flash('Your message has been sent!', 'success')
             return redirect(url_for('contact'))
+        except urllib.error.HTTPError as e:
+            body = e.read().decode()
+            print(f"SendGrid Error {e.code}: {body}")
+            if is_ajax:
+                return jsonify({'ok': False, 'error': f'SendGrid {e.code}: {body}'}), 500
+            flash('Error sending message.', 'danger')
+            return render_template('contact.html')
         except Exception as e:
-            print(f"SMTP Error: {e}")
+            print(f"Error: {e}")
             if is_ajax:
                 return jsonify({'ok': False, 'error': str(e)}), 500
             flash('Error sending message.', 'danger')
