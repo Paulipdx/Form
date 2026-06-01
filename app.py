@@ -46,7 +46,7 @@ def shop():
 def contact():
     if request.method == 'POST':
         # Safely handle both JSON/AJAX and standard HTML form payloads
-       if request.is_json:
+       if request.is_json:  # ← must align with the line below it
             data = request.get_json()
             first_name = data.get('firstName') or data.get('first_name') or data.get('name') or ''
             last_name = data.get('lastName') or data.get('last_name', '')
