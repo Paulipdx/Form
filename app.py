@@ -6,11 +6,11 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.networksolutionsemail.com")
+SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.domain.com")
 
-raw_port = os.getenv("SMTP_PORT", "2525")
+raw_port = os.getenv("SMTP_PORT", "465")
 if not raw_port or "<REDACTED>" in str(raw_port) or not str(raw_port).isdigit():
-    SMTP_PORT = 2525
+    SMTP_PORT = 465
 else:
     SMTP_PORT = int(raw_port)
 
@@ -93,7 +93,6 @@ def contact():
         msg['To'] = RECEIVER_EMAIL
 
         try:
-           try:
             print(f"DEBUG: Connecting to {SMTP_SERVER}:{SMTP_PORT} as {SMTP_USERNAME}")
             with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
@@ -114,3 +113,4 @@ def contact():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
+
