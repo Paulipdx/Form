@@ -58,6 +58,7 @@ def contact():
             phone = request.form.get('phone') or request.form.get('phone_optional', '')
             subject = request.form.get('subject', 'Other')
             message = request.form.get('message', '')
+            uploaded_file = request.files.get('attachment')
             is_ajax = False
 
         first_name = str(first_name).strip()
