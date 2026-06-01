@@ -39,9 +39,13 @@ def shop():
     return render_template('shop.html')
 
 
+import base64
+
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
+
+        # Detect JSON vs form
         if request.is_json:
             data = request.get_json()
             first_name = data.get('firstName') or data.get('first_name') or data.get('name') or ''
@@ -50,6 +54,7 @@ def contact():
             phone = data.get('phone') or data.get('phone_optional', '')
             subject = data.get('subject', 'Other')
             message = data.get('message', '')
+            uploaded_file = None
             is_ajax = True
         else:
             first_name = request.form.get('first_name') or request.form.get('name') or ''
@@ -61,16 +66,14 @@ def contact():
             uploaded_file = request.files.get('attachment')
             is_ajax = False
 
-        first_name = str(first_name).strip()
-        email = str(email).strip()
-        message = str(message).strip()
-
+        # Validation
         if not first_name or not email or not message:
             if is_ajax:
                 return jsonify({'ok': False, 'error': 'Required fields missing'}), 400
             flash('Name, Email, and Message are required!', 'danger')
             return render_template('contact.html')
 
+        # Build email content
         email_content = (
             f"New Web Inquiry\n"
             f"---------------------------\n"
@@ -81,13 +84,29 @@ def contact():
             f"Message:\n{message}"
         )
 
-        payload = json.dumps({
+        # Build SendGrid payload
+        payload_dict = {
             "personalizations": [{"to": [{"email": RECEIVER_EMAIL}]}],
             "from": {"email": FROM_EMAIL},
             "subject": f"Contact Form: {subject} (from {first_name})",
             "content": [{"type": "text/plain", "value": email_content}]
-        }).encode("utf-8")
+        }
 
+        # Handle attachment if present
+        if uploaded_file and uploaded_file.filename:
+            file_data = uploaded_file.read()
+            encoded = base64.b64encode(file_data).decode()
+
+            payload_dict["attachments"] = [{
+                "content": encoded,
+                "type": uploaded_file.mimetype,
+                "filename": uploaded_file.filename,
+                "disposition": "attachment"
+            }]
+
+        payload = json.dumps(payload_dict).encode("utf-8")
+
+        # Send request
         req = urllib.request.Request(
             "https://api.sendgrid.com/v3/mail/send",
             data=payload,
@@ -99,24 +118,18 @@ def contact():
         )
 
         try:
-            print(f"DEBUG: Sending via SendGrid from {FROM_EMAIL} to {RECEIVER_EMAIL}")
             with urllib.request.urlopen(req) as resp:
-                print(f"DEBUG: SendGrid response {resp.status}")
+                print(f"SendGrid response {resp.status}")
             if is_ajax:
                 return jsonify({'ok': True, 'message': 'Email sent successfully!'})
             flash('Your message has been sent!', 'success')
             return redirect(url_for('contact'))
+
         except urllib.error.HTTPError as e:
             body = e.read().decode()
             print(f"SendGrid Error {e.code}: {body}")
             if is_ajax:
                 return jsonify({'ok': False, 'error': f'SendGrid {e.code}: {body}'}), 500
-            flash('Error sending message.', 'danger')
-            return render_template('contact.html')
-        except Exception as e:
-            print(f"Error: {e}")
-            if is_ajax:
-                return jsonify({'ok': False, 'error': str(e)}), 500
             flash('Error sending message.', 'danger')
             return render_template('contact.html')
 
