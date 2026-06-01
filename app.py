@@ -22,7 +22,7 @@ RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "pablo@tactuswellness.com")
 
 @app.get("/healthz")
 def healthz():
-    return "ok", 200
+    return jsonify(status="ok"), 200
 
 @app.route("/", methods=["GET", "POST"])
 def index():
