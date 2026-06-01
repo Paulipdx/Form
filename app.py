@@ -88,7 +88,8 @@ def contact():
         msg['From'] = SMTP_USERNAME
         msg['To'] = RECEIVER_EMAIL
 
-        try:
+       try:
+            print(f"DEBUG: Connecting to {SMTP_SERVER}:{SMTP_PORT} as {SMTP_USERNAME}")
             with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
                 server.starttls()
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
@@ -103,7 +104,6 @@ def contact():
                 return jsonify({'ok': False, 'error': str(e)}), 500
             flash('Error sending message.', 'danger')
             return render_template('contact.html')
-
     return render_template('contact.html')
 
 
