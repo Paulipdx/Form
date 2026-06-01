@@ -460,10 +460,28 @@
 @media (max-width: 768px) {
     .nav-book-center { display: none; }
     .nav-chat-btn { display: none; }
-    nav { padding: 0 16px; flex-wrap: nowrap; }
-    .nav-right { margin-left: auto; flex-shrink: 0; }
-    .nav-logo-text { font-size: 0.95rem; }
-    .nav-logo { height: 32px; }
+    nav {
+      padding: 0 16px;
+      flex-wrap: nowrap;
+      height: 64px;
+      align-items: center;
+    }
+    .logo-link {
+      flex-shrink: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .nav-logo-text {
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-logo { height: 30px; }
+    .nav-right {
+      flex-shrink: 0;
+      margin-left: auto;
+    }
   }
   
   @media (max-width: 600px) {
