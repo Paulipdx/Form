@@ -2,7 +2,42 @@
  
 {% block body %}
 
-    
+    {% extends "layout.html" %}
+
+{% block body %}
+
+<style>
+  .hero-video-wrapper {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    width: 100%;
+    line-height: 0;
+  }
+
+  .hero-video-wrapper video {
+    width: 100%;
+    max-height: 75vh;
+    object-fit: cover;
+    display: block;
+  }
+
+  .video-spacer {
+    height: min(75vh, 56.25vw);
+  }
+</style>
+
+<div class="hero-video-wrapper">
+  <video autoplay muted loop playsinline>
+    <source src="{{ url_for('static', filename='images/formvideo.mp4') }}" type="video/mp4">
+  </video>
+</div>
+
+<div class="video-spacer"></div>
+
+{% endblock %}
 
    
 
