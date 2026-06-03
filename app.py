@@ -18,10 +18,8 @@ def healthz():
     return jsonify(status="ok"), 200
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
-    if request.method == "POST":
-        return render_template("greet.html", name=request.form.get("name", "World"))
     return render_template("index.html")
 
 
