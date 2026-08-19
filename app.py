@@ -1,5 +1,6 @@
 import os
 import smtplib
+import ssl
 import base64
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -13,7 +14,7 @@ app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 # ── SMTP CONFIG ──
 SMTP_SERVER    = os.getenv("SMTP_SERVER",    "mail.form.rehab")
-SMTP_PORT      = int(os.getenv("SMTP_PORT",  "587"))
+SMTP_PORT      = int(os.getenv("SMTP_PORT",  "465"))
 SMTP_USERNAME  = os.getenv("SMTP_USERNAME",  "hello@form.rehab")
 SMTP_PASSWORD  = os.getenv("SMTP_PASSWORD",  "")
 FROM_EMAIL     = os.getenv("FROM_EMAIL",     "hello@form.rehab")
@@ -36,12 +37,22 @@ def send_email(subject, body, reply_to=None, attachments=None):
                 encoders.encode_base64(part)
                 part.add_header('Content-Disposition', f'attachment; filename="{filename}"')
                 msg.attach(part)
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.ehlo()
-            server.starttls()
-            server.ehlo()
-            server.login(SMTP_USERNAME, SMTP_PASSWORD)
-            server.send_message(msg)
+
+        if SMTP_PORT == 465:
+            # SSL from the start
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT, context=context) as server:
+                server.login(SMTP_USERNAME, SMTP_PASSWORD)
+                server.send_message(msg)
+        else:
+            # STARTTLS (587)
+            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+                server.ehlo()
+                server.starttls()
+                server.ehlo()
+                server.login(SMTP_USERNAME, SMTP_PASSWORD)
+                server.send_message(msg)
+
         return True, None
     except Exception as e:
         print(f"SMTP Error: {e}")
