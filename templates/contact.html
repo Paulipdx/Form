@@ -360,7 +360,7 @@ async function submitForm() {
     phone:     document.getElementById('phone').value.trim(),
     subject:   document.getElementById('subject').value,
     message,
-    to:        'pablo@tactuswellness.com',
+
   };
 
   // Send via Formspree (replace YOUR_FORM_ID with your Formspree form ID)
@@ -371,14 +371,15 @@ async function submitForm() {
       headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
       body: JSON.stringify(payload)
     });
-    if (res.ok) {
+    const data = await res.json();
+    if (res.ok && data.ok) {
       document.getElementById('contactForm').style.display = 'none';
       document.getElementById('formSuccess').style.display = 'block';
     } else {
-      alert('Something went wrong. Please email us directly at pablo@tactuswellness.com');
+      alert('Something went wrong. Please email us directly at hello@form.rehab or call 971-200-0553');
     }
   } catch {
-    alert('Something went wrong. Please email us directly at pablo@tactuswellness.com');
+    alert('Something went wrong. Please email us directly at hello@form.rehab or call 971-200-0553');
   }
 }
 </script>
