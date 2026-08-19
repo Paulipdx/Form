@@ -147,7 +147,10 @@ Sitemap: https://form.rehab/sitemap.xml
 """
     return Response(content, mimetype='text/plain')
 
-
+@app.route('/google0b875814bda86a62.html')
+def google_verify():
+    return Response('google-site-verification: google0b875814bda86a62.html', mimetype='text/html')
+    
 @app.route('/sitemap.xml')
 def sitemap():
     today = date.today().isoformat()
