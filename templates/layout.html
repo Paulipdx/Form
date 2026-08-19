@@ -3,10 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ═══ SEO: BASE META (overridable per page) ═══ -->
+<title>{% block title %}Form.Rehab — Massage Therapy & Rehabilitation | Portland, OR{% endblock %}</title>
+<meta name="description" content="{% block meta_description %}Form.Rehab by Tactus Wellness offers licensed massage therapy and rehabilitation in Portland, OR. In-network with Moda Health & Regence BCBS. Auto accident, work injury, and wellness care.{% endblock %}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{% block canonical %}https://form.rehab{{ request.path }}{% endblock %}">
+
+<!-- ═══ OPEN GRAPH (Facebook, LinkedIn, iMessage previews) ═══ -->
+<meta property="og:type" content="{% block og_type %}website{% endblock %}">
+<meta property="og:site_name" content="Form.Rehab">
+<meta property="og:title" content="{% block og_title %}Form.Rehab — Massage Therapy & Rehabilitation | Portland, OR{% endblock %}">
+<meta property="og:description" content="{% block og_description %}Licensed massage therapy and rehabilitation in Portland, OR. In-network with Moda Health & Regence BCBS. Book online today.{% endblock %}">
+<meta property="og:url" content="https://form.rehab{{ request.path }}">
+<meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='images/og-default.jpg', _external=True) }}{% endblock %}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+
+<!-- ═══ TWITTER / X CARD ═══ -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{% block twitter_title %}Form.Rehab — Massage Therapy & Rehabilitation | Portland, OR{% endblock %}">
+<meta name="twitter:description" content="{% block twitter_description %}Licensed massage therapy and rehabilitation in Portland, OR. In-network with Moda Health & Regence BCBS.{% endblock %}">
+<meta name="twitter:image" content="{% block twitter_image %}{{ url_for('static', filename='images/og-default.jpg', _external=True) }}{% endblock %}">
+
+<!-- ═══ JSON-LD: LocalBusiness + MedicalBusiness Schema ═══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "MedicalBusiness", "HealthAndBeautyBusiness"],
+  "@id": "https://form.rehab/#business",
+  "name": "Form.Rehab — Tactus Wellness",
+  "alternateName": ["Form Rehab", "Tactus Massage & Wellness", "Tactus Wellness"],
+  "url": "https://form.rehab",
+  "logo": "{{ url_for('static', filename='images/logoicon.png', _external=True) }}",
+  "image": "{{ url_for('static', filename='images/og-default.jpg', _external=True) }}",
+  "description": "Licensed massage therapy and rehabilitation clinic in Portland, Oregon. Specializing in auto accident recovery, work injuries, and clinical wellness care. In-network with Moda Health and Regence BlueCross BlueShield.",
+  "priceRange": "$$",
+  "currenciesAccepted": "USD",
+  "paymentAccepted": "Cash, Credit Card, HSA, FSA, HRA, HMA, Insurance",
+  "telephone": "+19712000553",
+  "faxNumber": "+15032965362",
+  "email": "pablo@tactuswellness.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "1842 NW 25th Ave, Suite C3",
+    "addressLocality": "Portland",
+    "addressRegion": "OR",
+    "postalCode": "97210",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 45.5348,
+    "longitude": -122.6938
+  },
+  "openingHoursSpecification": [
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Monday","opens":"10:00","closes":"18:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Tuesday","opens":"08:00","closes":"18:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Wednesday","opens":"10:00","closes":"18:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"10:00","closes":"12:30"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"08:00","closes":"12:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Sunday","opens":"08:00","closes":"13:00"}
+  ],
+  "areaServed": {
+    "@type": "City",
+    "name": "Portland",
+    "sameAs": "https://www.wikidata.org/wiki/Q6106"
+  },
+  "hasMap": "https://maps.google.com/?q=1842+NW+25th+Ave+Suite+C3+Portland+OR+97210",
+  "sameAs": [
+    "https://form.rehab",
+    "https://www.tactuswellness.com"
+  ],
+  "medicalSpecialty": [
+    "Massage Therapy",
+    "Rehabilitation",
+    "Sports Medicine",
+    "Auto Accident Recovery",
+    "Occupational Therapy"
+  ],
+  "provider": {
+    "@type": "Person",
+    "name": "Pablo Cohen",
+    "jobTitle": "Licensed Massage Therapist",
+    "worksFor": {"@id": "https://form.rehab/#business"}
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Massage Therapy Packages",
+    "url": "https://form.rehab/shop"
+  }
+}
+</script>
+
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
-<title>{% block title %}FORM Massage Rehab Clinic{% endblock %}</title>
+
+{% block extra_head %}{% endblock %}
+
 <style>
   :root {
     --emerald: #3daa6e;
@@ -31,7 +127,6 @@
     --chat-bot: #f0f5f2;
     --chat-bot-text: #1a2420;
     --overlay: rgba(26,36,32,0.55);
-    --btn-book-bg: var(--grad);
   }
   [data-theme="dark"] {
     --bg: #0e1714;
@@ -54,107 +149,58 @@
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-
   body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
+    background: var(--bg); color: var(--text);
     transition: background 0.3s, color 0.3s;
-    min-height: 100vh;
-    padding-top: 64px;
+    min-height: 100vh; padding-top: 64px;
   }
 
   /* ── NAV ── */
   nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
     background: var(--nav-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    height: 64px;
-    display: flex;
-    align-items: center;
-    padding: 0 24px;
-    justify-content: space-between;
+    height: 64px; display: flex; align-items: center;
+    padding: 0 24px; justify-content: space-between;
     transition: background 0.3s;
   }
-
-  .logo-link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-  }
+  .logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .nav-logo { height: 40px; width: auto; }
   .nav-logo-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    font-weight: 500;
-    background: var(--grad);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: 0.02em;
+    font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 500;
+    background: var(--grad); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 0.02em;
   }
 
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    position: relative;
+  /* Centered book link */
+  .nav-book-center {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600;
+    letter-spacing: 0.04em; color: var(--text-muted);
+    text-decoration: none; padding: 6px 14px;
+    border-radius: 24px; border: 1.5px solid var(--border);
+    transition: color 0.2s, border-color 0.2s, background 0.2s; white-space: nowrap;
   }
+  .nav-book-center:hover { color: var(--emerald); border-color: var(--emerald); background: rgba(61,170,110,0.06); }
+  .nav-book-center svg { color: var(--emerald); }
+  @media (max-width: 768px) { .nav-book-center { display: none; } }
 
-  /* Book button */
-  .btn-book {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 8px 18px;
-    background: var(--grad);
-    color: #fff;
-    border: none;
-    border-radius: 24px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    box-shadow: 0 2px 12px rgba(61,170,110,0.28);
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    white-space: nowrap;
-  }
-  .btn-book:hover {
-    background: var(--grad-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 18px rgba(61,170,110,0.38);
-  }
-
-  /* Chat nav button */
+  .nav-right { display: flex; align-items: center; gap: 14px; position: relative; }
   .nav-chat-btn {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--grad);
-    border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff;
-    box-shadow: 0 2px 12px rgba(61,170,110,0.3);
-    transition: transform 0.2s, box-shadow 0.2s;
-    flex-shrink: 0;
+    width: 36px; height: 36px; border-radius: 50%; background: var(--grad);
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #fff; box-shadow: 0 2px 12px rgba(61,170,110,0.3);
+    transition: transform 0.2s, box-shadow 0.2s; flex-shrink: 0;
   }
   .nav-chat-btn:hover { transform: scale(1.08); box-shadow: 0 4px 18px rgba(61,170,110,0.4); }
 
-  /* Hamburger */
   .hamburger {
-    width: 36px; height: 36px;
-    border: none; background: none; cursor: pointer;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 5px; padding: 4px;
-    border-radius: 8px;
-    transition: background 0.2s;
+    width: 36px; height: 36px; border: none; background: none; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 5px; padding: 4px; border-radius: 8px; transition: background 0.2s;
   }
   .hamburger:hover { background: var(--surface); }
   .hamburger span {
@@ -168,128 +214,112 @@
 
   /* ── DROPDOWN ── */
   .dropdown {
-    position: absolute;
-    top: 44px; right: 0;
-    width: 240px;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
-    border-radius: 16px;
-    overflow: hidden;
-    transform: scaleY(0);
-    transform-origin: top;
+    position: absolute; top: 44px; right: 0; width: 240px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12); border-radius: 16px; overflow: hidden;
+    transform: scaleY(0); transform-origin: top;
     transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s;
-    opacity: 0;
-    pointer-events: none;
+    opacity: 0; pointer-events: none;
   }
   .dropdown.open { transform: scaleY(1); opacity: 1; pointer-events: all; }
-
   .dropdown a, .dropdown button.dd-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 13px 18px;
-    text-decoration: none;
-    color: var(--text);
-    font-size: 0.875rem; font-weight: 500;
-    background: none; border: none; width: 100%;
-    cursor: pointer; transition: background 0.15s;
-    font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 12px; padding: 13px 18px;
+    text-decoration: none; color: var(--text); font-size: 0.875rem; font-weight: 500;
+    background: none; border: none; width: 100%; cursor: pointer;
+    transition: background 0.15s; font-family: 'DM Sans', sans-serif;
   }
   .dropdown a:hover, .dropdown button.dd-item:hover { background: var(--surface); }
   .dropdown a.active-link { color: var(--emerald); }
-
   .dd-divider { height: 1px; background: var(--border); margin: 4px 0; }
-
+  .dd-book-item {
+    background: rgba(61,170,110,0.06) !important; margin: 8px 10px 4px;
+    border-radius: 10px; width: calc(100% - 20px) !important;
+    padding: 11px 14px !important; color: var(--emerald) !important; font-weight: 600 !important;
+  }
+  .dd-book-item:hover { background: rgba(61,170,110,0.12) !important; }
   .dd-chat-item {
-    background: var(--surface) !important;
-    margin: 6px 10px;
-    border-radius: 10px;
-    width: calc(100% - 20px) !important;
-    padding: 11px 14px !important;
+    background: var(--surface) !important; margin: 6px 10px;
+    border-radius: 10px; width: calc(100% - 20px) !important; padding: 11px 14px !important;
   }
   .dd-chat-icon {
-    width: 26px; height: 26px;
-    background: var(--grad); border-radius: 50%;
+    width: 26px; height: 26px; background: var(--grad); border-radius: 50%;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-
   .dark-toggle-label {
-    display: flex; align-items: center; gap: 12px;
-    padding: 13px 18px; cursor: pointer;
-    color: var(--text); font-size: 0.875rem; font-weight: 500;
-    transition: background 0.15s;
-    user-select: none;
+    display: flex; align-items: center; gap: 12px; padding: 13px 18px;
+    cursor: pointer; color: var(--text); font-size: 0.875rem; font-weight: 500;
+    transition: background 0.15s; user-select: none;
   }
   .dark-toggle-label:hover { background: var(--surface); }
-
   .toggle-switch {
     position: relative; width: 38px; height: 22px;
     background: var(--border); border-radius: 11px;
     transition: background 0.25s; flex-shrink: 0; margin-left: auto;
   }
   .toggle-switch::after {
-    content: ''; position: absolute;
-    top: 3px; left: 3px; width: 16px; height: 16px;
-    background: #fff; border-radius: 50%;
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 16px; height: 16px; background: #fff; border-radius: 50%;
     transition: transform 0.25s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
   }
   [data-theme="dark"] .toggle-switch { background: var(--emerald); }
   [data-theme="dark"] .toggle-switch::after { transform: translateX(16px); }
 
-  /* ── MAIN CONTENT ── */
-  .content-container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 48px 24px 100px;
-  }
+  /* ── CONTENT ── */
+  .content-container { max-width: 1100px; margin: 0 auto; padding: 48px 24px 100px; }
 
-  /* ── BOOK APPOINTMENT FLOATING BTN ── */
-  .book-fixed {
-    position: fixed;
-    bottom: 96px; right: 28px;
-    z-index: 8998;
+  /* ── FOOTER ── */
+  .site-footer {
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 48px 24px 32px; text-align: center; transition: background 0.3s;
   }
-  .book-fixed a {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    padding: 10px 20px;
-    background: var(--grad);
-    color: #fff;
-    border-radius: 24px;
-    text-decoration: none;
-    box-shadow: 0 4px 18px rgba(61,170,110,0.35);
-    display: inline-flex; align-items: center; gap: 7px;
-    transition: background 0.2s, transform 0.15s;
+  .footer-book {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600;
+    letter-spacing: 0.03em; color: #fff; background: var(--grad);
+    padding: 14px 36px; border-radius: 32px; text-decoration: none;
+    box-shadow: 0 4px 20px rgba(61,170,110,0.3); margin-bottom: 28px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    display: inline-flex;
   }
-  .book-fixed a:hover { background: var(--grad-hover); transform: translateY(-2px); }
+  .footer-book:hover { background: var(--grad-hover); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(61,170,110,0.4); }
+  .footer-links {
+    display: flex; justify-content: center; flex-wrap: wrap;
+    gap: 6px 20px; margin-bottom: 20px;
+  }
+  .footer-links a {
+    font-size: 0.82rem; color: var(--text-muted); text-decoration: none;
+    font-weight: 500; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--emerald); }
+  .footer-bottom {
+    font-size: 0.75rem; color: var(--text-light);
+    line-height: 1.7;
+  }
+  .footer-bottom a { color: var(--text-light); text-decoration: none; }
+  .footer-bottom a:hover { color: var(--emerald); }
 
-  /* ── CHAT FAB ── */
+  /* ── CHAT ── */
   .chat-fab {
     position: fixed; bottom: 28px; right: 28px; z-index: 9000;
-    width: 56px; height: 56px; border-radius: 50%;
-    background: var(--grad); border: none; cursor: pointer;
-    box-shadow: 0 6px 24px rgba(61,170,110,0.4);
+    width: 56px; height: 56px; border-radius: 50%; background: var(--grad);
+    border: none; cursor: pointer; box-shadow: 0 6px 24px rgba(61,170,110,0.4);
     display: flex; align-items: center; justify-content: center;
     color: #fff; transition: transform 0.25s, box-shadow 0.25s;
   }
   .chat-fab:hover { transform: scale(1.1); box-shadow: 0 10px 32px rgba(61,170,110,0.5); }
   .chat-fab svg { transition: transform 0.3s; }
   .chat-fab.open svg { transform: rotate(45deg); }
-
-  /* ── CHAT WINDOW ── */
   .chat-window {
     position: fixed; bottom: 96px; right: 28px; z-index: 8999;
-    width: 360px; height: 520px;
-    background: var(--chat-bg); border: 1px solid var(--chat-border);
-    border-radius: 20px; box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+    width: 360px; height: 520px; background: var(--chat-bg);
+    border: 1px solid var(--chat-border); border-radius: 20px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.18);
     display: flex; flex-direction: column; overflow: hidden;
-    transform: scale(0.9) translateY(20px);
-    transform-origin: bottom right;
+    transform: scale(0.9) translateY(20px); transform-origin: bottom right;
     opacity: 0; pointer-events: none;
     transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.25s;
   }
   .chat-window.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
-
   .chat-header {
     padding: 15px 18px; background: var(--grad);
     display: flex; align-items: center; gap: 11px; flex-shrink: 0;
@@ -302,10 +332,9 @@
   .chat-header-name { font-size: 0.88rem; font-weight: 600; color: #fff; }
   .chat-header-status { font-size: 0.7rem; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 5px; }
   .status-dot { width: 6px; height: 6px; background: #7fffb0; border-radius: 50%; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
   .chat-close { background: none; border: none; color: rgba(255,255,255,0.8); cursor: pointer; padding: 4px; border-radius: 6px; }
   .chat-close:hover { color: #fff; background: rgba(255,255,255,0.15); }
-
   .chat-messages {
     flex: 1; overflow-y: auto; padding: 14px;
     display: flex; flex-direction: column; gap: 11px;
@@ -317,190 +346,60 @@
   .msg-bubble { padding: 9px 13px; border-radius: 16px; font-size: 0.86rem; line-height: 1.5; }
   .msg-bot .msg-bubble { background: var(--chat-bot); color: var(--chat-bot-text); border-bottom-left-radius: 4px; }
   .msg-user .msg-bubble { background: var(--emerald); color: #fff; border-bottom-right-radius: 4px; }
-
   .typing-indicator span {
-    display: inline-block; width: 6px; height: 6px;
-    background: var(--text-muted); border-radius: 50%;
-    margin: 0 2px; animation: typing 1.2s infinite;
+    display: inline-block; width: 6px; height: 6px; background: var(--text-muted);
+    border-radius: 50%; margin: 0 2px; animation: typing 1.2s infinite;
   }
-  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes typing { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
-
+  .typing-indicator span:nth-child(2){animation-delay:0.2s}
+  .typing-indicator span:nth-child(3){animation-delay:0.4s}
+  @keyframes typing{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
   .chat-input-row {
     padding: 11px 14px; border-top: 1px solid var(--chat-border);
     display: flex; gap: 8px; align-items: center;
     background: var(--chat-bg); flex-shrink: 0;
   }
   .chat-input {
-    flex: 1; padding: 9px 13px;
-    border: 1.5px solid var(--border); border-radius: 24px;
-    background: var(--input-bg); color: var(--text);
+    flex: 1; padding: 9px 13px; border: 1.5px solid var(--border);
+    border-radius: 24px; background: var(--input-bg); color: var(--text);
     font-family: 'DM Sans', sans-serif; font-size: 0.86rem; outline: none;
     transition: border-color 0.2s;
   }
   .chat-input:focus { border-color: var(--emerald); }
   .chat-input::placeholder { color: var(--text-light); }
   .chat-send {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: var(--grad); border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%; background: var(--grad);
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
     color: #fff; transition: transform 0.15s, box-shadow 0.15s;
   }
   .chat-send:hover { transform: scale(1.08); box-shadow: 0 3px 12px rgba(61,170,110,0.35); }
 
-  /* ── OVERLAY ── */
-  .overlay {
-    display: none; position: fixed; inset: 0;
-    background: var(--overlay); z-index: 999;
-  }
+  .overlay { display: none; position: fixed; inset: 0; background: var(--overlay); z-index: 999; }
   .overlay.show { display: block; }
 
-  /* ── GENERAL TYPOGRAPHY & UTILS ── */
-  h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 400; color: var(--text); }
-  h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.02em; }
-  h2 { font-size: clamp(1.4rem, 3vw, 2rem); }
-  h3 { font-size: 1.2rem; }
-  p  { line-height: 1.7; color: var(--text-muted); font-weight: 300; }
-  a  { color: var(--emerald); }
-
-  .grad-text {
-    background: var(--grad);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Cards used across the site */
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-    box-shadow: var(--card-shadow);
-    transition: box-shadow 0.3s, transform 0.3s;
-  }
+  /* ── UTILS ── */
+  h1,h2,h3 { font-family: 'Playfair Display', serif; font-weight: 400; color: var(--text); }
+  h1 { font-size: clamp(1.8rem,4vw,2.8rem); letter-spacing: -0.02em; }
+  h2 { font-size: clamp(1.4rem,3vw,2rem); }
+  p { line-height: 1.7; color: var(--text-muted); font-weight: 300; }
+  a { color: var(--emerald); }
+  .grad-text { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: var(--card-shadow); transition: box-shadow 0.3s, transform 0.3s; }
   .card:hover { box-shadow: var(--card-shadow-hover); transform: translateY(-3px); }
 
-  /* ── CENTERED NAV BOOK LINK ── */
-  .nav-book-center {
-    position: absolute;
-    left: 50%; transform: translateX(-50%);
-    display: inline-flex; align-items: center; gap: 7px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem; font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
-    text-decoration: none;
-    padding: 6px 14px;
-    border-radius: 24px;
-    border: 1.5px solid var(--border);
-    transition: color 0.2s, border-color 0.2s, background 0.2s;
-    white-space: nowrap;
-  }
-  .nav-book-center:hover {
-    color: var(--emerald);
-    border-color: var(--emerald);
-    background: rgba(61,170,110,0.06);
-  }
-  .nav-book-center svg { color: var(--emerald); }
-
-  /* ── DROPDOWN BOOK ITEM ── */
-  .dd-book-item {
-    background: rgba(61,170,110,0.06) !important;
-    margin: 8px 10px 4px;
-    border-radius: 10px;
-    width: calc(100% - 20px) !important;
-    padding: 11px 14px !important;
-    color: var(--emerald) !important;
-    font-weight: 600 !important;
-  }
-  .dd-book-item:hover { background: rgba(61,170,110,0.12) !important; }
-
-  /* ── FOOTER ── */
-  .site-footer {
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 48px 24px 32px;
-    text-align: center;
-    transition: background 0.3s;
-  }
-  .footer-book {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1rem; font-weight: 600;
-    letter-spacing: 0.03em;
-    color: #fff;
-    background: var(--grad);
-    padding: 14px 36px;
-    border-radius: 32px;
-    text-decoration: none;
-    box-shadow: 0 4px 20px rgba(61,170,110,0.3);
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    margin-bottom: 32px;
-  }
-  .footer-book:hover { background: var(--grad-hover); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(61,170,110,0.4); }
-  .footer-tagline {
-    font-size: 0.78rem; color: var(--text-light);
-    margin-top: 24px; letter-spacing: 0.06em;
-  }
-  .footer-links {
-    display: flex; justify-content: center;
-    flex-wrap: wrap; gap: 6px 20px;
-    margin-bottom: 20px;
-  }
-  .footer-links a {
-    font-size: 0.82rem; color: var(--text-muted);
-    text-decoration: none; font-weight: 500;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover { color: var(--emerald); }
-
-  /* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-    .nav-book-center { display: none; }
-    .nav-chat-btn { display: none; }
-    nav {
-      display: flex !important;
-      flex-direction: row !important;
-      flex-wrap: nowrap !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      padding: 0 16px !important;
-      height: 64px !important;
-    }
-    .logo-link {
-      flex-shrink: 0;
-      position: static !important;
-      transform: none !important;
-      left: auto !important;
-    }
-    .nav-logo { height: 32px; }
-    .nav-logo-text { font-size: 0.9rem; }
-    .nav-right {
-      flex-shrink: 0;
-      display: flex !important;
-      align-items: center !important;
-    }
-  }
-  
   @media (max-width: 600px) {
     .content-container { padding: 32px 16px 100px; }
     .chat-window { width: calc(100vw - 32px); right: 16px; }
-    .btn-book-label { display: none; }
   }
 </style>
 </head>
 <body>
 
-<!-- ═══ NAV ═══ -->
 <nav>
   <a href="{{ url_for('index') }}" class="logo-link">
-    <img src="{{ url_for('static', filename='images/logoicon.png') }}" alt="Form.Rehab Logo" class="nav-logo">
+    <img src="{{ url_for('static', filename='images/logoicon.png') }}" alt="Form.Rehab — Massage Therapy Portland OR" class="nav-logo">
     <span class="nav-logo-text">FORM.REHAB</span>
   </a>
 
-  <!-- ── CENTERED NAV BOOK LINK ── -->
   <a href="https://pocketsuite.io/link/form-massage-rehab-clinic" class="nav-book-center" target="_blank" rel="noopener">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     Book an Appointment
@@ -513,12 +412,9 @@
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
-
     <div class="dropdown" id="dropdown">
-      <a href="https://pocketsuite.io/link/form-massage-rehab-clinic" target="_blank" rel="noopener" class="dd-book-item">
-        <div class="dd-chat-icon">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        </div>
+      <a href="https://pocketsuite.io/link/form-massage-rehab-clinic" target="_blank" rel="noopener" class="dd-item dd-book-item">
+        <div class="dd-chat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
         Book an Appointment
         <svg style="margin-left:auto;opacity:0.4" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </a>
@@ -551,9 +447,7 @@
       </label>
       <div class="dd-divider"></div>
       <button class="dd-item dd-chat-item" id="ddChatBtn">
-        <div class="dd-chat-icon">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
+        <div class="dd-chat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
         Chat with Us
         <svg style="margin-left:auto;opacity:0.4" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
@@ -563,12 +457,10 @@
 
 <div class="overlay" id="overlay"></div>
 
-<!-- ═══ PAGE CONTENT ═══ -->
 <main class="content-container">
   {% block body %}{% endblock %}
 </main>
 
-<!-- ═══ FOOTER ═══ -->
 <footer class="site-footer">
   <a href="https://pocketsuite.io/link/form-massage-rehab-clinic" class="footer-book" target="_blank" rel="noopener">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -581,22 +473,24 @@
     <a href="{{ url_for('shop') }}">Shop</a>
     <a href="{{ url_for('contact') }}">Contact</a>
   </div>
-  <div class="footer-tagline">© 2026 Form.Rehab · Tactus Wellness · Portland, OR</div>
+  <div class="footer-bottom">
+    © 2026 Form.Rehab &nbsp;·&nbsp;
+    1842 NW 25th Ave Suite C3, Portland OR 97210 &nbsp;·&nbsp;
+    <a href="tel:9712000553">971-200-0553</a><br>
+    Licensed Massage Therapy &amp; Rehabilitation &nbsp;·&nbsp;
+    In-network: Moda Health &amp; Regence BCBS<br>
+    <a href="{{ url_for('sitemap') }}">Sitemap</a> &nbsp;·&nbsp;
+    <a href="{{ url_for('robots') }}">robots.txt</a>
+  </div>
 </footer>
 
-<!-- ═══ CHAT FAB ═══ -->
 <button class="chat-fab" id="chatFab" aria-label="Open chat">
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-  </svg>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 </button>
 
-<!-- ═══ CHAT WINDOW ═══ -->
 <div class="chat-window" id="chatWindow">
   <div class="chat-header">
-    <div class="chat-avatar">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    </div>
+    <div class="chat-avatar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
     <div class="chat-header-info">
       <div class="chat-header-name">Form.Rehab Assistant</div>
       <div class="chat-header-status"><span class="status-dot"></span> Online now</div>
@@ -606,9 +500,7 @@
     </button>
   </div>
   <div class="chat-messages" id="chatMessages">
-    <div class="msg msg-bot">
-      <div class="msg-bubble">Hi! 👋 Welcome to Form.Rehab. How can I help you today?</div>
-    </div>
+    <div class="msg msg-bot"><div class="msg-bubble">Hi! 👋 Welcome to Form.Rehab. How can I help you today?</div></div>
   </div>
   <div class="chat-input-row">
     <input class="chat-input" id="chatInput" type="text" placeholder="Type a message…" autocomplete="off">
@@ -620,17 +512,13 @@
 
 <script>
 const WEBHOOK_URL = 'https://n8n.lmtnotes.com/webhook/85fb129c-2ac9-4b66-bf08-4d077f2be9ce/chat';
-
-// ── DARK MODE ──
 const html = document.documentElement;
-if (localStorage.getItem('formrehab-theme') === 'dark') html.setAttribute('data-theme', 'dark');
+if (localStorage.getItem('formrehab-theme') === 'dark') html.setAttribute('data-theme','dark');
 document.getElementById('darkToggle').addEventListener('click', () => {
   const dark = html.getAttribute('data-theme') === 'dark';
-  dark ? html.removeAttribute('data-theme') : html.setAttribute('data-theme', 'dark');
+  dark ? html.removeAttribute('data-theme') : html.setAttribute('data-theme','dark');
   localStorage.setItem('formrehab-theme', dark ? 'light' : 'dark');
 });
-
-// ── HAMBURGER ──
 const hamburger = document.getElementById('hamburger');
 const dropdown  = document.getElementById('dropdown');
 const overlay   = document.getElementById('overlay');
@@ -640,77 +528,32 @@ hamburger.addEventListener('click', () => {
   overlay.classList.toggle('show', open);
 });
 overlay.addEventListener('click', () => {
-  dropdown.classList.remove('open');
-  hamburger.classList.remove('open');
-  overlay.classList.remove('show');
+  dropdown.classList.remove('open'); hamburger.classList.remove('open'); overlay.classList.remove('show');
 });
-
-// ── CHAT ──
-const chatFab      = document.getElementById('chatFab');
-const chatWindow   = document.getElementById('chatWindow');
-const chatInput    = document.getElementById('chatInput');
-const chatMessages = document.getElementById('chatMessages');
-let sessionId = 'sess-' + Date.now();
-
-function openChat() {
-  chatWindow.classList.add('open');
-  chatFab.classList.add('open');
-  chatInput.focus();
-  dropdown.classList.remove('open');
-  hamburger.classList.remove('open');
-  overlay.classList.remove('show');
+const chatFab=document.getElementById('chatFab');
+const chatWindow=document.getElementById('chatWindow');
+const chatInput=document.getElementById('chatInput');
+const chatMessages=document.getElementById('chatMessages');
+let sessionId='sess-'+Date.now();
+function openChat(){chatWindow.classList.add('open');chatFab.classList.add('open');chatInput.focus();dropdown.classList.remove('open');hamburger.classList.remove('open');overlay.classList.remove('show');}
+function closeChat(){chatWindow.classList.remove('open');chatFab.classList.remove('open');}
+chatFab.addEventListener('click',()=>chatWindow.classList.contains('open')?closeChat():openChat());
+document.getElementById('chatClose').addEventListener('click',closeChat);
+document.getElementById('navChatBtn').addEventListener('click',openChat);
+document.getElementById('ddChatBtn').addEventListener('click',openChat);
+function appendMsg(t,r){const w=document.createElement('div');w.className='msg msg-'+r;const b=document.createElement('div');b.className='msg-bubble';b.textContent=t;w.appendChild(b);chatMessages.appendChild(w);chatMessages.scrollTop=chatMessages.scrollHeight;}
+function showTyping(){const w=document.createElement('div');w.className='msg msg-bot';w.innerHTML='<div class="msg-bubble typing-indicator"><span></span><span></span><span></span></div>';chatMessages.appendChild(w);chatMessages.scrollTop=chatMessages.scrollHeight;return w;}
+async function sendMsg(){
+  const text=chatInput.value.trim();if(!text)return;
+  chatInput.value='';appendMsg(text,'user');const typing=showTyping();
+  try{
+    const res=await fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chatInput:text,sessionId})});
+    const data=await res.json();typing.remove();
+    appendMsg(data.output||data.text||data.message||data.response||'Thanks! We will be in touch shortly.','bot');
+  }catch{typing.remove();appendMsg('Thanks for reaching out! Email us at pablo@tactuswellness.com','bot');}
 }
-function closeChat() {
-  chatWindow.classList.remove('open');
-  chatFab.classList.remove('open');
-}
-
-chatFab.addEventListener('click', () => chatWindow.classList.contains('open') ? closeChat() : openChat());
-document.getElementById('chatClose').addEventListener('click', closeChat);
-document.getElementById('navChatBtn').addEventListener('click', openChat);
-document.getElementById('ddChatBtn').addEventListener('click', openChat);
-
-function appendMsg(text, role) {
-  const w = document.createElement('div');
-  w.className = 'msg msg-' + role;
-  const b = document.createElement('div');
-  b.className = 'msg-bubble';
-  b.textContent = text;
-  w.appendChild(b);
-  chatMessages.appendChild(w);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-function showTyping() {
-  const w = document.createElement('div');
-  w.className = 'msg msg-bot';
-  w.innerHTML = '<div class="msg-bubble typing-indicator"><span></span><span></span><span></span></div>';
-  chatMessages.appendChild(w);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  return w;
-}
-async function sendMsg() {
-  const text = chatInput.value.trim();
-  if (!text) return;
-  chatInput.value = '';
-  appendMsg(text, 'user');
-  const typing = showTyping();
-  try {
-    const res = await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatInput: text, sessionId })
-    });
-    const data = await res.json();
-    typing.remove();
-    appendMsg(data.output || data.text || data.message || data.response || 'Thanks! We will be in touch shortly.', 'bot');
-  } catch {
-    typing.remove();
-    appendMsg('Thanks for reaching out! You can also email us at shop@tactuswellness.com', 'bot');
-  }
-}
-document.getElementById('chatSend').addEventListener('click', sendMsg);
-chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
+document.getElementById('chatSend').addEventListener('click',sendMsg);
+chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg();});
 </script>
-
 </body>
 </html>
