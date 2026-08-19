@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 # ── SMTP CONFIG ──
-SMTP_SERVER    = os.getenv("SMTP_SERVER",    "mail.form.rehab")
+SMTP_SERVER    = os.getenv("SMTP_SERVER",    "stalwart-iynj8jrknr7oz5mvd51unqiz")
 SMTP_PORT      = int(os.getenv("SMTP_PORT",  "465"))
 SMTP_USERNAME  = os.getenv("SMTP_USERNAME",  "hello@form.rehab")
 SMTP_PASSWORD  = os.getenv("SMTP_PASSWORD",  "")
@@ -39,8 +39,10 @@ def send_email(subject, body, reply_to=None, attachments=None):
                 msg.attach(part)
 
         if SMTP_PORT == 465:
-            # SSL from the start
+            # SSL from the start — cert verification disabled for self-hosted Stalwart
             context = ssl.create_default_context()
+            context.check_hostname = False
+            context.verify_mode = ssl.CERT_NONE
             with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT, context=context) as server:
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
                 server.send_message(msg)
