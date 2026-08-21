@@ -7,9 +7,11 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, Response
+from werkzeug.middleware.proxy_fix import ProxyFix
 from datetime import date
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 # ── SMTP CONFIG ──
