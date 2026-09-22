@@ -2,12 +2,12 @@ import os
 import smtplib
 import ssl
 import base64
+import urllib.request as urllib_req
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, Response
-import urllib.request as urllib_req
 from werkzeug.middleware.proxy_fix import ProxyFix
 from datetime import date
 
@@ -40,9 +40,7 @@ def send_email(subject, body, reply_to=None, attachments=None):
                 encoders.encode_base64(part)
                 part.add_header('Content-Disposition', f'attachment; filename="{filename}"')
                 msg.attach(part)
-
         if SMTP_PORT == 465:
-            # SSL from the start — cert verification disabled for self-hosted Stalwart
             context = ssl.create_default_context()
             context.check_hostname = False
             context.verify_mode = ssl.CERT_NONE
@@ -50,14 +48,12 @@ def send_email(subject, body, reply_to=None, attachments=None):
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
                 server.send_message(msg)
         else:
-            # STARTTLS (587)
             with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
                 server.ehlo()
                 server.starttls()
                 server.ehlo()
                 server.login(SMTP_USERNAME, SMTP_PASSWORD)
                 server.send_message(msg)
-
         return True, None
     except Exception as e:
         print(f"SMTP Error: {e}")
@@ -83,6 +79,10 @@ def services():
 @app.route("/shop")
 def shop():
     return render_template('shop.html')
+
+@app.route("/store")
+def store():
+    return render_template('store.html')
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -153,7 +153,6 @@ def contact():
 
 @app.route('/ghost-products')
 def ghost_products():
-    """Proxy Ghost Content API to avoid CORS issues."""
     try:
         ghost_url = 'https://store.form.rehab/ghost/api/content/posts/?key=403d27e7690d217b82029e50a2&limit=4&fields=title,excerpt,url,feature_image,tags,published_at&include=tags&order=published_at+desc'
         req = urllib_req.Request(ghost_url, headers={'User-Agent': 'Mozilla/5.0'})
@@ -164,7 +163,7 @@ def ghost_products():
             'Cache-Control': 'public, max-age=300'
         })
     except Exception as e:
-        print(f'Ghost proxy error: {e}')
+        print(f"Ghost proxy error: {e}")
         return jsonify({'posts': [], 'error': str(e)}), 200
 
 
@@ -184,6 +183,7 @@ def sitemap():
         ('https://form.rehab/about',    '0.8', 'monthly'),
         ('https://form.rehab/services', '0.9', 'monthly'),
         ('https://form.rehab/shop',     '0.9', 'weekly'),
+        ('https://form.rehab/store',    '0.9', 'weekly'),
         ('https://form.rehab/contact',  '0.7', 'monthly'),
     ]
     urls = ''
