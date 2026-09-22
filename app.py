@@ -151,12 +151,15 @@ def contact():
     return render_template('contact.html')
 
 
+# Replaced Ghost code with new to allow Ghost to propagate in form.rehab/store
+
 @app.route('/ghost-products')
 def ghost_products():
     try:
-        ghost_url = 'https://store.form.rehab/ghost/api/content/posts/?key=403d27e7690d217b82029e50a2&limit=4&fields=title,excerpt,url,feature_image,tags,published_at&include=tags&order=published_at+desc'
-        req = urllib_req.Request(ghost_url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib_req.urlopen(req, timeout=5) as resp:
+        import urllib.request
+        url = 'https://store.form.rehab/ghost/api/content/posts/?key=403d27e7690d217b82029e50a2&limit=4&fields=title,excerpt,url,feature_image,tags,published_at&include=tags&order=published_at+desc'
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=10) as resp:
             data = resp.read()
         return Response(data, mimetype='application/json', headers={
             'Access-Control-Allow-Origin': '*',
@@ -164,7 +167,7 @@ def ghost_products():
         })
     except Exception as e:
         print(f"Ghost proxy error: {e}")
-        return jsonify({'posts': [], 'error': str(e)}), 200
+        return jsonify({'posts': []}), 200
 
 
 @app.route('/robots.txt')
