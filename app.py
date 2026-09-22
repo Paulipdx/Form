@@ -157,7 +157,7 @@ def contact():
 def ghost_products():
     try:
         import urllib.request
-        url = 'https://store.form.rehab/ghost/api/content/posts/?key=403d27e7690d217b82029e50a2&limit=4&fields=title,excerpt,url,feature_image,tags,published_at&include=tags&order=published_at+desc'
+        url = 'https://store.form.rehab/ghost/api/content/posts/?key=403d27e7690d217b82029e50a2&limit=4&include=tags'
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         with urllib.request.urlopen(req, timeout=10) as resp:
             data = resp.read()
