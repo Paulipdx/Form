@@ -83,6 +83,10 @@ def services():
 def shop():
     return render_template('shop.html')
 
+@app.route('/store')
+def store():
+    return render_template('store.html')
+
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
