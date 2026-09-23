@@ -4,15 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Standard Favicons -->
-<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
-<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
-
-<!-- Apple Touch Icon -->
-<link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
-
-
-
 <!-- ═══ SEO: BASE META (overridable per page) ═══ -->
 <title>{% block title %}Form.Rehab — Massage Therapy & Rehabilitation | Portland, OR{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}Form.Rehab by Tactus Wellness offers licensed massage therapy and rehabilitation in Portland, OR. In-network with Moda Health & Regence BCBS. Auto accident, work injury, and wellness care.{% endblock %}">
@@ -425,9 +416,18 @@
   .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: var(--card-shadow); transition: box-shadow 0.3s, transform 0.3s; }
   .card:hover { box-shadow: var(--card-shadow-hover); transform: translateY(-3px); }
 
+  @media (max-width: 768px) {
+    .nav-book-center { display: none; }
+    .nav-right { margin-left: auto; flex-shrink: 0; }
+    nav { padding: 0 16px; justify-content: space-between; }
+  }
+
   @media (max-width: 600px) {
     .content-container { padding: 32px 16px 100px; }
     .chat-window { width: calc(100vw - 32px); right: 16px; }
+    nav { height: 64px; }
+    .nav-logo { height: 34px; }
+    .nav-logo-text { font-size: 1rem; }
   }
 </style>
 </head>
