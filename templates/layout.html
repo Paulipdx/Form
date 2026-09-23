@@ -418,16 +418,31 @@
 
   @media (max-width: 768px) {
     .nav-book-center { display: none; }
-    .nav-right { margin-left: auto; flex-shrink: 0; }
-    nav { padding: 0 16px; justify-content: space-between; }
+    nav {
+      padding: 0 16px;
+      height: 64px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+      flex-shrink: 0;
+      height: 64px;
+    }
+    .logo-link { flex-shrink: 0; }
+    .nav-logo { height: 34px; }
+    .nav-logo-text { font-size: 1rem; }
   }
 
   @media (max-width: 600px) {
     .content-container { padding: 32px 16px 100px; }
     .chat-window { width: calc(100vw - 32px); right: 16px; }
-    nav { height: 64px; }
-    .nav-logo { height: 34px; }
-    .nav-logo-text { font-size: 1rem; }
   }
 </style>
 </head>
