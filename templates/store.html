@@ -27,6 +27,21 @@
                 radial-gradient(ellipse at 30% 50%, rgba(61,170,110,0.06) 0%, transparent 60%);
     pointer-events: none;
   }
+  .store-hero::after {
+    content: '';
+    position: absolute;
+    right: -40px; top: 50%;
+    transform: translateY(-50%);
+    width: 420px; height: 420px;
+    background: url("{{ url_for('static', filename='images/dna-overlay.png') }}") no-repeat center/contain;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .store-hero > * { position: relative; z-index: 1; }
+  @media (max-width: 768px) {
+    .store-hero::after { width: 220px; height: 220px; right: -20px; opacity: 0.2; }
+  }
   .store-hero-badge {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
