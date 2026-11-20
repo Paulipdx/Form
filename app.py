@@ -2,6 +2,7 @@ import os
 import smtplib
 import ssl
 import base64
+import json
 import urllib.request as urllib_req
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -168,6 +169,28 @@ def ghost_products():
     except Exception as e:
         print(f"Ghost proxy error: {e}")
         return jsonify({'posts': []}), 200
+
+
+@app.route('/ghost-brands')
+def ghost_brands():
+    """Read brands from Ghost's navigation menu (Settings -> Navigation)."""
+    try:
+        ghost_url = 'https://store.form.rehab/ghost/api/content/settings/?key=403d27e7690d217b82029e50a2'
+        req = urllib_req.Request(ghost_url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib_req.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read())
+        skip = {'home', 'about', 'about us', 'contact', 'subscribe', 'sign in', 'sign up'}
+        brands = []
+        for item in data.get('settings', {}).get('navigation', []):
+            label = (item.get('label') or '').strip()
+            url = (item.get('url') or '').strip()
+            if label and url and label.lower() not in skip:
+                brands.append({'label': label, 'url': url})
+        return Response(json.dumps({'brands': brands}), mimetype='application/json',
+                        headers={'Cache-Control': 'public, max-age=300'})
+    except Exception as e:
+        print(f'Ghost brands error: {e}')
+        return jsonify({'brands': [], 'error': str(e)}), 200
 
 
 @app.route('/robots.txt')

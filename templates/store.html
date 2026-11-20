@@ -311,7 +311,7 @@
 <section class="categories-section">
   <p class="section-label">Browse by Brand</p>
   <div class="section-title">Our Trusted Brands</div>
-  <div class="cat-grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
+  <div class="cat-grid" id="brand-grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
 
     <a href="https://store.form.rehab/thorne/" target="_blank" rel="noopener" class="cat-card">
       <div class="cat-icon" style="background:rgba(61,170,110,0.1);">
@@ -478,6 +478,70 @@
     console.error('Ghost API fetch error:', err);
     loading.style.display = 'none';
     errEl.style.display = 'block';
+  }
+})();
+</script>
+
+<script>
+(async function loadBrands() {
+  const grid = document.getElementById('brand-grid');
+  if (!grid) return;
+  const STORE = 'https://store.form.rehab';
+
+  // Optional short taglines. New brands without one get a default line.
+  const taglines = {
+    'thorne': 'Clinically backed formulas',
+    'donotage': 'Advancing longevity research',
+    "pablo's picks": 'Straight from the treatment room'
+  };
+
+  const icons = [
+    '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>'
+  ];
+
+  const esc = s => String(s).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+
+  try {
+    const res = await fetch('/ghost-brands');
+    if (!res.ok) throw new Error('brands ' + res.status);
+    const data = await res.json();
+    const brands = data.brands || [];
+    if (!brands.length) return;   // keep the fallback cards already on the page
+
+    const cards = brands.map((b, i) => {
+      const emerald = i % 2 === 0;
+      const color = emerald ? 'var(--emerald)' : 'var(--sky)';
+      const bg = emerald ? 'rgba(61,170,110,0.1)' : 'rgba(58,159,216,0.1)';
+      const url = b.url.startsWith('http') ? b.url : STORE + (b.url.startsWith('/') ? '' : '/') + b.url;
+      const tagline = taglines[b.label.trim().toLowerCase()] || ('Shop ' + b.label + ' products');
+      return `
+        <a href="${esc(url)}" target="_blank" rel="noopener" class="cat-card">
+          <div class="cat-icon" style="background:${bg};">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${icons[i % icons.length]}</svg>
+          </div>
+          <div>
+            <span style="display:block;">${esc(b.label)}</span>
+            <span style="font-size:0.72rem;color:var(--text-muted);font-weight:300;">${esc(tagline)}</span>
+          </div>
+        </a>`;
+    }).join('');
+
+    const allCard = `
+      <a href="${STORE}" target="_blank" rel="noopener" class="cat-card">
+        <div class="cat-icon" style="background:rgba(58,159,216,0.1);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </div>
+        <div>
+          <span style="display:block;">All Products</span>
+          <span style="font-size:0.72rem;color:var(--text-muted);font-weight:300;">Browse everything we carry</span>
+        </div>
+      </a>`;
+
+    grid.innerHTML = cards + allCard;
+  } catch (err) {
+    console.error('Brand load error:', err);   // fallback cards stay visible
   }
 })();
 </script>
